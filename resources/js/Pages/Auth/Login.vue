@@ -12,6 +12,7 @@ import * as z from 'zod'
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/Components/ui/form';
 import { Card, CardContent, CardHeader } from '@/Components/ui/card';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
+import { Loader2 } from 'lucide-vue-next';
 
 defineProps({
     canResetPassword: {
@@ -28,19 +29,27 @@ const formSchema = toTypedSchema(z.object({
   remember: z.boolean().optional()
 }))
 
-const form = useForm({
+const { handleSubmit, isSubmitting } = useForm({
   validationSchema: formSchema,
 })
 
-const onSubmit = form.handleSubmit((values, actions) => {
-    router.post(route('login'), values, {
-        onSuccess: (page) => console.log('success'),
-        onFinish: () => console.log('finish'),
-        onError: (errors) => {
-            Object.keys(errors).forEach(key => {
-                actions.setFieldError(key, errors[key]);
-            });
-        }
+const onSubmit = handleSubmit((values, actions) => {
+    return new Promise((resolve, reject) => {
+        router.post(route('login'), values, {
+            onSuccess: (page) => {
+                console.log('success');
+                resolve();
+            },
+            onFinish: () => {
+                console.log('finish');
+            },
+            onError: (errors) => {
+                Object.keys(errors).forEach(key => {
+                    actions.setFieldError(key, errors[key]);
+                });
+                resolve()
+            }
+        });
     });
 })
 
@@ -105,11 +114,14 @@ const onSubmit = form.handleSubmit((values, actions) => {
 
                         <Button
                             class="ms-4"
-                            :class="{ 'opacity-25': form.processing }"
-                            :disabled="form.processing"
+                            :class="{ 'opacity-25': isSubmitting }"
+                            :disabled="isSubmitting"
                             type="submit"
                         >
-                            Masuk
+                            <Loader2 class="w-5 h-5 mx-3 animate-spin" v-show="isSubmitting" />
+                            <span v-show="!isSubmitting">
+                                Masuk
+                            </span>
                         </Button>
                     </div>
                 </form>
