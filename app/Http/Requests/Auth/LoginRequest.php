@@ -3,7 +3,9 @@
 namespace App\Http\Requests\Auth;
 
 use Illuminate\Auth\Events\Lockout;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
@@ -31,6 +33,16 @@ class LoginRequest extends FormRequest
             'password' => ['required', 'string'],
         ];
     }
+
+     /**
+    * [failedValidation [Overriding the event validator for custom error response]]
+    * @param  Validator $validator [description]
+    * @return [object][object of various validation errors]
+    */
+    public function failedValidation(Validator $validator) {
+        //write your bussiness logic here otherwise it will give same old JSON response
+       throw new HttpResponseException(response()->json($validator->errors(), 422));
+   }
 
     /**
      * Attempt to authenticate the request's credentials.
