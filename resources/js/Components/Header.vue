@@ -1,6 +1,6 @@
 <script setup>
 import { ChevronLeft, Moon, Sun } from "lucide-vue-next";
-import { defineProps } from "vue";
+import { defineProps, ref } from "vue";
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -15,14 +15,28 @@ import { useColorMode } from "@vueuse/core";
 import { Link } from "@inertiajs/vue3";
 
 const mode = useColorMode()
-defineProps(["title"]);
+
+const tgstatus = ref(true)
+
+const toggle = () => {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar) {
+        const currentShow = sidebar.getAttribute('data-show') === 'true';
+        sidebar.setAttribute('data-show', !currentShow);
+        tgstatus.value = !tgstatus.value
+    }
+}
+
+defineProps([
+    "title"
+]);
 </script>
 
 <template>
     <header class="flex flex-row items-center justify-between w-full px-3">
         <div class="flex flex-row items-center">
-            <Button variant="ghost">
-                <ChevronLeft :size="32" />
+            <Button variant="ghost" @click="toggle">
+                <ChevronLeft :size="32" :class="{ 'rotate-180': !tgstatus }"/>
             </Button>
             <div class="w-px h-12 bg-gray-200 dark:bg-gray-800 mx-2"></div>
             <div class="flex flex-col justify-start ms-2">
