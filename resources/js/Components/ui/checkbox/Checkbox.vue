@@ -1,6 +1,7 @@
 <script setup>
 import { cn } from '@/lib/utils';
-import { Check } from 'lucide-vue-next';
+import { Icon } from '@iconify/vue';
+// import { Check } from 'lucide-vue-next';
 import {
   CheckboxIndicator,
   CheckboxRoot,
@@ -45,7 +46,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits);
       class="flex h-full w-full items-center justify-center text-current"
     >
       <slot>
-        <Check class="h-4 w-4" />
+        <iconify-icon icon="lucide:check" class="h-4 w-4"/>
       </slot>
     </CheckboxIndicator>
   </CheckboxRoot>

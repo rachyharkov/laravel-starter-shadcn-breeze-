@@ -1,5 +1,4 @@
 <script setup>
-import { ChevronLeft, Moon, Sun } from "lucide-vue-next";
 import { defineProps, ref } from "vue";
 import {
     Breadcrumb,
@@ -12,7 +11,8 @@ import { Button } from "./ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { useColorMode } from "@vueuse/core";
-import { Link } from "@inertiajs/vue3";
+import { Head, Link } from "@inertiajs/vue3";
+import { Icon } from "@iconify/vue";
 
 const mode = useColorMode()
 
@@ -28,23 +28,26 @@ const toggle = () => {
 }
 
 defineProps([
-    "title"
+    "title",
+    "breadcrumb",
+    "description"
 ]);
 </script>
 
 <template>
+    <Head :title="title" />
     <header class="flex flex-row items-center justify-between w-full px-3">
         <div class="flex flex-row items-center">
             <Button variant="ghost" @click="toggle">
-                <ChevronLeft :size="32" :class="{ 'rotate-180': !tgstatus }"/>
+                <iconify-icon icon="lucide:chevron-left" :class="{ 'rotate-180': !tgstatus }" />
             </Button>
             <div class="w-px h-12 bg-gray-200 dark:bg-gray-800 mx-2"></div>
             <div class="flex flex-col justify-start ms-2">
                 <Breadcrumb>
                     <BreadcrumbList>
-                        <BreadcrumbItem>
-                            <BreadcrumbLink href="/">
-                                Dashboard
+                        <BreadcrumbItem v-for="(crumb, index) in breadcrumb" :key="index">
+                            <BreadcrumbLink :href="crumb.href">
+                                {{ crumb.label }}
                             </BreadcrumbLink>
                         </BreadcrumbItem>
                     </BreadcrumbList>
@@ -54,8 +57,7 @@ defineProps([
         </div>
         <div class="flex flex-row items-center gap-5">
             <Button variant="outline" class="w-10 h-10" @click="mode = mode === 'dark' ? 'light' : 'dark'">
-                <Moon v-if="mode === 'light'" />
-                <Sun v-else />
+                <iconify-icon :icon="mode === 'light' ? 'lucide:moon' : 'lucide:sun'"/>
             </Button>
             <DropdownMenu>
                 <DropdownMenuTrigger>

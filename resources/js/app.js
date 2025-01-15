@@ -1,5 +1,7 @@
 import '../css/app.css';
+import '../css/dataTables.tailwind.css';
 import './bootstrap';
+import { Icon } from '@iconify/vue';
 
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
@@ -16,10 +18,15 @@ createInertiaApp({
             import.meta.glob('./Pages/**/*.vue'),
         ),
     setup({ el, App, props, plugin }) {
-        return createApp({ render: () => h(App, props) })
-            .use(plugin)
-            .use(ZiggyVue)
-            .mount(el);
+        const VueApp = createApp({
+            render: () => h(App, props)
+        })
+
+        VueApp.config.globalProperties.$route = route
+        VueApp.component('iconify-icon', Icon)
+        return VueApp.use(plugin)
+                .use(ZiggyVue)
+                .mount(el);
     },
     progress: {
         color: '#4B5563',

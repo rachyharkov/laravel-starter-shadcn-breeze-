@@ -1,6 +1,7 @@
 <script setup>
 import { cn } from '@/lib/utils';
-import { ChevronRight } from 'lucide-vue-next';
+import { Icon } from '@iconify/vue';
+// import { ChevronRight } from 'lucide-vue-next';
 import { DropdownMenuSubTrigger, useForwardProps } from 'radix-vue';
 import { computed } from 'vue';
 
@@ -32,6 +33,6 @@ const forwardedProps = useForwardProps(delegatedProps);
     "
   >
     <slot />
-    <ChevronRight class="ml-auto h-4 w-4" />
+    <iconify-icon icon="lucide:chevron-right" class="ml-auto h-4 w-4" />
   </DropdownMenuSubTrigger>
 </template>

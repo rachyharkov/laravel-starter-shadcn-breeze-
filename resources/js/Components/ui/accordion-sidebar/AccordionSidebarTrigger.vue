@@ -1,6 +1,7 @@
 <script setup>
 import { cn } from '@/lib/utils';
-import { ChevronDown } from 'lucide-vue-next';
+// import { ChevronDown } from 'lucide-vue-next';
+import { Icon } from '@iconify/vue';
 import { AccordionHeader, AccordionTrigger } from 'radix-vue';
 import { computed } from 'vue';
 import { Button } from '../button';
@@ -24,7 +25,7 @@ const delegatedProps = computed(() => {
       v-bind="delegatedProps"
       :class="
         cn(
-          'flex flex-1 items-center justify-between my-2 font-medium transition-all [&[data-state=open]>button>svg]:rotate-180',
+          'flex flex-1 items-center justify-between font-medium transition-all [&[data-state=open]>button>iconify-icon]:rotate-180',
           props.class,
         )
       "
@@ -34,9 +35,7 @@ const delegatedProps = computed(() => {
                 <slot/>
             </div>
             <slot name="icon">
-                <ChevronDown
-                class="h-4 w-4 shrink-0 transition-transform duration-200"
-                />
+                <iconify-icon icon="lucide:chevron-down" class="h-4 w-4 shrink-0 transition-transform duration-200"/>
             </slot>
         </Button>
     </AccordionTrigger>

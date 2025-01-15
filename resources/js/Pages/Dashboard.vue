@@ -2,13 +2,11 @@
 import Header from '@/Components/Header.vue';
 import { Card, CardContent, CardHeader } from '@/Components/ui/card';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
 </script>
 
 <template>
-    <Head title="Dashboard" />
     <AuthenticatedLayout>
-        <Header title="Dashboardn" />
+        <Header title="Dashboard Utama" :breadcrumb="[{ label: 'Dashboard', currentPage: true }]" />
         <main class="w-full mt-4">
             <Card>
                 <CardHeader>

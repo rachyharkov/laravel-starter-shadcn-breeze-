@@ -1,19 +1,24 @@
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import Sidebar from "@/Components/Sidebar.vue";
-const showSidebar = ref(false);
+import flasher from '@flasher/flasher'
+
+const messages = ref([]);
+
+defineProps({
+    messages: Object
+})
 
 
-const toggleSidebar = () => {
-    showSidebar.value = !showSidebar.value;
-};
+watch(messages, (newValue) => {
+  flasher.render(newValue);
+});
 
-defineExpose({ toggleSidebar });
 </script>
 
 <template>
     <div class="flex flex-row gap-2 h-svh">
-        <Sidebar :is-shown="showSidebar"/>
+        <Sidebar/>
         <div class="flex flex-col items-start justify-start py-3 pe-3 w-full">
             <slot/>
         </div>

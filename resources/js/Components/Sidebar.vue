@@ -7,7 +7,7 @@
     import { Link } from "@inertiajs/vue3";
     import { Card, CardContent, CardHeader } from "@/Components/ui/card";
     import { Button } from "@/Components/ui/button";
-    import { ChartArea, ChevronLeft, Database, Moon, NotebookText, Shield, Users } from "lucide-vue-next";
+    import { Icon } from "@iconify/vue";
     import { AccordionSidebar, AccordionSidebarContent, AccordionSidebarItem, AccordionSidebarTrigger } from "@/Components/ui/accordion-sidebar";
 </script>
 
@@ -19,22 +19,25 @@
                 <h2 class="font-bold text-3xl">LARAVEL</h2>
             </CardHeader>
             <CardContent>
-                <div class="flex flex-col items-start">
-                    <Button size="lg" variant="" class="block w-full flex flex-row items-center gap-1 justify-start px-4">
-                        <ChartArea :size="42" class="mr-2" /> Dashboard
+                <div class="flex flex-col items-start gap-3">
+                    <Button size="lg" class="w-full justify-start p-0" :variant="route().current('dashboard') ? '' : 'ghost'">
+                        <Link :href="$route('dashboard')" class="inline-flex h-full w-full flex-row items-center px-4">
+                            <iconify-icon icon="lucide:chart-area" class="text-lg mr-2"/> Dashboard
+                        </Link>
                     </Button>
-                    <AccordionSidebar type="single" collapsible class="w-full">
+                    <AccordionSidebar type="single" collapsible class="w-full" default-value="item-1">
                         <AccordionSidebarItem value="item-1">
                             <AccordionSidebarTrigger>
-                                <Database class="w-8 h-8 mr-2"/>
-                                Master Data
+                                <iconify-icon icon="lucide:database" class="text-lg mr-2"/>Master Data
                             </AccordionSidebarTrigger>
                             <AccordionSidebarContent>
-                                <Button size="lg" variant="ghost" class="block w-full flex flex-row items-center justify-start ps-10">
+                                <Button size="lg" variant="ghost" class="w-full flex flex-row items-center justify-start ps-11">
                                     Peran
                                 </Button>
-                                <Button size="lg" variant="ghost" class="block w-full flex flex-row items-center justify-start ps-10">
-                                    Pengguna
+                                <Button size="lg" class="w-full p-0 w-full" :variant="route().current('users.index') ? '' : 'ghost'">
+                                    <Link :href="$route('users.index')" class="ps-11 w-full h-full flex items-center">
+                                        Pengguna
+                                    </Link>
                                 </Button>
                             </AccordionSidebarContent>
                         </AccordionSidebarItem>

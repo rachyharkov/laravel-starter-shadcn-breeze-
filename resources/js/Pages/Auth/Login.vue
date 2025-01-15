@@ -12,7 +12,8 @@ import * as z from 'zod'
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/Components/ui/form';
 import { Card, CardContent, CardHeader } from '@/Components/ui/card';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
-import { Loader2 } from 'lucide-vue-next';
+import { Icon } from '@iconify/vue';
+// import { Loader2 } from 'lucide-vue-next';
 
 defineProps({
     canResetPassword: {
@@ -118,7 +119,7 @@ const onSubmit = handleSubmit((values, actions) => {
                             :disabled="isSubmitting"
                             type="submit"
                         >
-                            <Loader2 class="w-5 h-5 mx-3 animate-spin" v-show="isSubmitting" />
+                            <iconify-icon icon="lucide:loader-circle" class="w-5 h-5 mx-3 animate-spin" v-show="isSubmitting"/>
                             <span v-show="!isSubmitting">
                                 Masuk
                             </span>
