@@ -19,7 +19,7 @@ watch(messages, (newValue) => {
 <template>
     <div class="flex flex-row gap-2 h-svh">
         <Sidebar/>
-        <div class="flex flex-col items-start justify-start py-3 pe-3 w-full">
+        <div class="flex flex-col items-start justify-start py-3 w-full overflow-y-scroll px-2">
             <slot/>
         </div>
     </div>

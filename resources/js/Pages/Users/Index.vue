@@ -60,19 +60,21 @@ const options = {
             sortable: false
         },
         {
-            title: 'Created at',
+            title: 'Teregistrasi pada',
             data: 'created_at',
             name: 'created_at'
-        }
+        },
+        {
+            title: 'Aksi',
+            name: 'action',
+            searchable: false,
+            sortable: false
+        },
     ],
     language: {
-    "processing"    :   "<div class='text-center p-4 rounded-lg' style='background-color: hsl(var(--border));color: hsl(var(--dt-text-footer-foreground-general));'>&emsp;Processing ...</div>",
+        "processing"    :   "<div class='text-center p-4 rounded-lg' style='background-color: hsl(var(--border));color: hsl(var(--dt-text-footer-foreground-general));'>&emsp;Processing ...</div>",
     }
 }
-
-// watch(search, debounce(function (value) {
-//     router.get(route('users.index'), { search: value }, { preserveScroll: true, preserveState: true, replace: true })
-// }, 300))
 </script>
 
 <template>
@@ -89,6 +91,12 @@ const options = {
                             <span :class="v.is_active == 0 ? 'text-red-500 dark:text-red-800' : 'text-green-500 dark:text-green-800'" class="flex flex-row gap-1 items-center"><iconify-icon icon="lucide:disc"/>{{ v.name }}</span>
                         </Badge>
                     </template>
+                </template>
+                <template #column-action>
+                    <div class="flex flex-row items-center gap-1">
+                        <Button variant="secondary" size="sm"><iconify-icon icon="lucide:file-pen-line"/> Edit</Button>
+                        <Button variant="destructive" size="sm"><iconify-icon icon="lucide:trash-2"/></Button>
+                    </div>
                 </template>
             </DataTable>
         </div>

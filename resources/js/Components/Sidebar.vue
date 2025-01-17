@@ -12,7 +12,7 @@
 </script>
 
 <template>
-    <div class="p-3 w-72 shrink-0 sticky overflow-hidden transition-all duration-300 data-[show=true]:w-0 [&[data-show='true']>div]:opacity-0 [&[data-show='false']>div]:opacity-100" id="sidebar" data-show="false">
+    <div class="p-3 w-72 shrink-0 sticky overflow-hidden transition-all duration-300 data-[show=true]:w-0 data-[show=true]:p-0" id="sidebar" data-show="false">
         <Card class="h-full transition-all">
             <CardHeader class="flex flex-row items-center gap-2">
                 <ApplicationLogo class="w-10 h-10" />
