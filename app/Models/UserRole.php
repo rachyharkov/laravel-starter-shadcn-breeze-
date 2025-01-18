@@ -21,7 +21,7 @@ class UserRole extends Model
      *
      * @var string[]
      */
-    protected $fillable = ['user_id', 'role_id'];
+    protected $fillable = ['user_id', 'role_id', 'is_active'];
 
     /**
      * Get the attributes that should be cast.
@@ -32,13 +32,13 @@ class UserRole extends Model
     {
         return ['created_at' => 'datetime:Y-m-d H:i:s', 'updated_at' => 'datetime:Y-m-d H:i:s'];
     }
-    
+
 
 	public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
 	{
 		return $this->belongsTo(\App\Models\User::class);
 	}
-	
+
 	public function role(): \Illuminate\Database\Eloquent\Relations\BelongsTo
 	{
 		return $this->belongsTo(\App\Models\Role::class);

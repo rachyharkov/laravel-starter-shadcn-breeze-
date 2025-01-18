@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->enum('gender', ['MALE', 'FEMALE']);
+            $table->enum('gender', ['MALE', 'FEMALE'])->nullable();
             $table->string('code')->nullable()->comment('Bisa untuk nisn/nip/nim/npm');
             $table->date('birth_date')->nullable();
             $table->string('birth_place')->nullable();

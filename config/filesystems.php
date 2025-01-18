@@ -30,10 +30,11 @@ return [
 
     'disks' => [
 
-        'local' => [
+        'private' => [
             'driver' => 'local',
             'root' => storage_path('app/private'),
-            'serve' => true,
+            'visibility' => 'private',
+            // 'serve' => true,
             'throw' => false,
         ],
 

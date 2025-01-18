@@ -59,6 +59,10 @@ div.datatable div.dt-container div.dt-layout-row.dt-layout-table .dt-processing 
     height: 100%;
 }
 
+div.datatable div.dt-container div.dt-layout-row.dt-layout-table .dt-layout-full{
+    width: 100%;
+}
+
 div.datatable div.dt-container div.dt-layout-row.dt-layout-table {
     border: 1px solid hsl(var(--border));
     border-radius: 0.55rem;

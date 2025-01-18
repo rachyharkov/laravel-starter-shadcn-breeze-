@@ -1,27 +1,38 @@
 <script setup>
 import { router, useForm } from '@inertiajs/vue3'
 import { Input } from '@/Components/ui/input'
-import { Card, CardContent, CardDescription, CardHeader } from '@/Components/ui/card'
-import { Select } from '@/Components/ui/select'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/Components/ui/card'
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
 import { Button } from '@/Components/ui/button'
-// import { AlertCircle } from 'lucide-vue-next'
 import { Alert, AlertDescription, AlertTitle } from '@/Components/ui/alert'
-import { Icon } from '@iconify/vue'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/Components/ui/textarea'
+import { Link } from '@inertiajs/vue3'
+import { reactive, ref } from 'vue'
+import { Avatar, AvatarFallback, AvatarImage } from '@/Components/ui/avatar'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/Components/ui/dropdown-menu'
+import { Switch } from '@/Components/ui/switch'
+import { RadioGroup, RadioGroupItem } from '@/Components/ui/radio-group'
 
 const props = defineProps({
     user: Object,
     user_roles: Object,
+    roles: Array
 })
 
 const isEdit = props?.user?.id ? true : false
 
-const form = useForm('CreateUser', {
+const fileInputRef = ref()
+
+const form = useForm('UpdateUser', {
+    _method: 'put',
     username: props?.user?.username ?? '',
     name: props?.user?.name ?? '',
     email: props?.user?.email ?? '',
     code: props?.user?.code ?? '',
     branch_id: '',
-    role_id: props?.user?.role_id ?? '',
+    role_id: props?.user?.role_id?.toString() ?? '',
+    is_active: props?.user?.is_active ?? '',
     password: '',
     password_confirmation: '' ?? '',
     birth_date: props?.user?.birth_date ?? '',
@@ -40,26 +51,19 @@ const saveAndback = () => {
 
 const save = () => {
     if (isEdit) {
-        form.put(route('users.update', props.user.id), {
-            preserveScroll: true,
-            onSuccess: () => {
-                form.reset()
-                form.clearErrors()
-            },
-            onFinish: () => {
-                form.reset('password', 'password_confirmation')
-            },
+        form.post(route('users.update', props?.user?.id), {
+            preserveScroll: true
         })
     } else {
+        form._method = 'post'
         form.post(route('users.store'), {
             preserveScroll: true,
             onSuccess: () => {
                 form.reset()
-                form.clearErrors()
             },
             onFinish: () => {
                 form.reset('password', 'password_confirmation')
-            },
+            }
         })
     }
 }
@@ -75,12 +79,14 @@ const genderOptions = [
     },
 ]
 
-const roleOptions = props?.user_roles?.map((role) => {
-    return {
-        label: role.name,
-        value: role.id
-    }
-});
+const roleOptions = props.roles.reduce((acc, role) => {
+    acc[role.id] = role.name;
+    return acc;
+}, {});
+
+const anu = (a) => {
+    return URL.createObjectURL(a)
+}
 
 // const branchOptions = [
 //     {
@@ -97,145 +103,205 @@ const roleOptions = props?.user_roles?.map((role) => {
 </script>
 
 <template>
-    <div class="flex flex-row flex-wrap mb-3">
-        <div class="w-full" v-if="$page?.props?.flash">
-            <Alert variant="destructive">
-                <iconify-icon icon="lucide:circle-alert" class="w-4 h-4"/>
-                <AlertTitle>Perhatian</AlertTitle>
-                <AlertDescription>
-                    $page.props.flash.message
-                </AlertDescription>
+    <div class="w-full" v-if="$page?.props?.flash">
+        <Alert variant="destructive">
+            <iconify-icon icon="lucide:circle-alert" class="w-4 h-4"/>
+            <AlertTitle>Perhatian</AlertTitle>
+            <AlertDescription>
+                $page.props.flash.message
+            </AlertDescription>
+        </Alert>
+    </div>
+    <form @submit.prevent="save" novalidate>
+        <div class="w-full flex justify-center flex-col gap-4">
+            <Alert v-if="form.isDirty">
+                <iconify-icon icon="lucide:circle-alert" class="h-4 w-4"/>
+                <AlertTitle>Jangan Lupa Simpan</AlertTitle>
+                <AlertDescription>Terdapat perubahan data, pastikan anda sudah menyimpannya</AlertDescription>
             </Alert>
-        </div>
-        <Form v-slot="$form" :resolver="resolver" :initialValues="form" @submit="save" class="flex justify-center flex-col gap-4">
-            <div class="w-full">
-                <div v-if="form.isDirty" class="alert alert-warning">Terdapat perubahan data yang belum disimpan, pastikan
-                    kamu menyimpannya ya!</div>
-                <Card>
-                    <CardHeader>
-                        Infromasi Dasar
-                    </CardHeader>
+            <Card class="flex flex-row">
+                <CardHeader class="w-1/3">
+                    <CardTitle>Infromasi Dasar</CardTitle>
                     <CardDescription>
                         Informasi yang wajib dimiliki oleh setiap pengguna untuk menggunakan aplikasi
                     </CardDescription>
-                    <CardContent>
-                        <div class="flex flex-row">
-                            <div class="w-1/3">
-                                <InputText name="username" type="text"  placeholder="Username" required autofocus />
-                            </div>
-
-                            <div class="w-1/3">
-                                <InputText name="name" type="text"  placeholder="Name" />
-                            </div>
-
-                            <div class="w-1/3">
-                                <InputText name="email" type="email"  placeholder="Email" />
-                            </div>
-
-                            <div class="w-1/3">
-                                <InputText name="code" type="number"  placeholder="NISN/NIP" />
-                            </div>
-
-                            <!-- <div class="w-1/3">
-                                <Select id" :options="branchOptions" placeholder="Cabang" name="branch_id" type="text"
-                                 />
-                            </div> -->
-
-                            <div class="w-1/3">
-                                <Select v-bind="form.role_id">
-                                    <FormControl>
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Pilih peran" />
-                                        </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                        <SelectGroup>
-                                            <SelectItem v-for="(v, i) in roleOptions" :value="v.value">
-                                                {{ v.label }}
-                                            </SelectItem>
-                                        </SelectGroup>
-                                    </SelectContent>
-                                </Select>
-                            </div>
+                </CardHeader>
+                <CardContent class="pt-6 max-w-lg w-full">
+                    <div class="flex flex-col flex-wrap gap-3">
+                        <div class="grid items-center gap-1.5">
+                            <Label for="name">Nama</Label>
+                            <Input id="name" type="text" placeholder="John Doe" :error="form.errors.name" v-model="form.name" />
                         </div>
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardHeader>
-                        Password
-                    </CardHeader>
+
+                        <div class="grid items-center gap-1.5">
+                            <Label for="email">Email</Label>
+                            <Input id="email" type="email" placeholder="johndoe@example.com" :error="form.errors.email" v-model="form.email" />
+                        </div>
+
+                        <div class="grid items-center gap-1.5">
+                            <Label for="code">NO KTP/KITAS/SIM</Label>
+                            <Input id="code" type="text" placeholder="3216xxxxxxxxxxxxxxxxxxxx" :error="form.errors.code" v-model="form.code"/>
+                        </div>
+
+                        <!-- <div class="grid items-center gap-1.5">
+                            <Select id" :options="branchOptions" placeholder="Cabang" name="branch_id" type="text"
+                                />
+                        </div> -->
+
+                        <div class="grid items-center gap-1.5">
+                            <Label for="role_id">Peran</Label>
+                            <Select id="role_id" v-model="form.role_id">
+                                <SelectTrigger :error="form.errors.role_id">
+                                    <SelectValue placeholder="Pilih peran"/>
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectItem v-for="(v, i) in roleOptions" :value="i">
+                                            {{ v }}
+                                        </SelectItem>
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
+            <Card class="flex flex-row">
+                <CardHeader class="w-1/3">
+                    <CardTitle>Status</CardTitle>
                     <CardDescription>
-                        Buatlah password yang sulit ditebak dengan gabungan huruf, angka, atau bahkan simbol seperti: <small>!@#$%</small>.
+                        Tentukan apakah akun dapat aktif masuk ke sistem
                     </CardDescription>
-                    <CardContent>
-                        <div class="flex flex-row">
-                            <div class="w-1/2">
-                                <InputText name="password" type="password" placeholder="Password" />
-                                <Message v-if="$form.email?.invalid" severity="error" size="small" variant="simple">{{ $form.email.error?.message }}</Message>
-                                <small class="font-light" v-if="isEdit">Biarkan password dan password konfirmasi kosong jika tidak ingin menggantinya.</small>
+                </CardHeader>
+                <CardContent class="pt-6 max-w-lg w-full">
+                    <div class="flex flex-col flex-wrap gap-3">
+                        <RadioGroup v-model="form.is_active">
+                            <div class="flex items-start space-x-2 my-1">
+                                <RadioGroupItem id="1" value="1" />
+                                <Label for="1" class="flex flex-col">
+                                    <span class="font-bold mb-1">Aktif</span>
+                                    <span class="text-sm font-light">User dapat melakukan login ke dalam sistem</span>
+                                </Label>
                             </div>
+                            <div class="flex items-start space-x-2 my-1">
+                                <RadioGroupItem id="0" value="0" />
+                                <Label for="0" class="flex flex-col">
+                                    <span class="font-bold mb-1">Tidak Aktif</span>
+                                    <span class="text-sm font-light">User akan dinonaktifkan dan tidak dapat masuk ke sistem</span>
+                                </Label>
+                            </div>
+                        </RadioGroup>
+                    </div>
+                </CardContent>
+            </Card>
 
-                            <div class="w-1/2">
-                                <InputText name="password_confirmation" placeholder="Konfirmasi Password" type="passsword" />
-                            </div>
+            <Card class="flex flex-row">
+                <CardHeader class="w-1/3">
+                    <CardTitle>Akun</CardTitle>
+                    <CardDescription>
+                        Buatlah Username unik dan password yang sulit ditebak dengan gabungan huruf, angka, atau bahkan simbol seperti: <small>!@#$%</small>.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent class="pt-6 max-w-lg w-full">
+                    <div class="flex flex-col flex-wrap gap-3">
+                        <Alert v-if="isEdit">
+                            <iconify-icon icon="lucide:circle-alert" class="h-4 w-4"/>
+                            <AlertDescription>Biarkan password dan password konfirmasi kosong jika tidak ingin menggantinya.</AlertDescription>
+                        </Alert>
+                        <div class="w-full grid items-center gap-1.5">
+                            <Label for="username">Username</Label>
+                            <Input id="username" placeholder="johndoe24" type="text" autocomplete="username" :error="form.errors.username" v-model="form.username" />
                         </div>
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardHeader>
-                        Informasi Tambahan
-                    </CardHeader>
+
+                        <div class="w-full grid items-center gap-1.5">
+                            <Label for="password">Password</Label>
+                            <Input id="password" type="password" autocomplete="new-password" placeholder="password" :error="form.errors.password" v-model="form.password"/>
+                        </div>
+                        <div class="w-full grid items-center gap-1.5">
+                            <Label for="password_confirmation">Konfirmasi password</Label>
+                            <Input id="password_confirmation" autocomplete="new-password" placeholder="Konfirmasi Password" type="password" v-model="form.password_confirmation" :error="form.password_confirmation == form.password ? null : 'Password tidak sama'" />
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
+            <Card class="flex flex-row">
+                <CardHeader class="w-1/3">
+                    <CardTitle>Informasi Tambahan</CardTitle>
                     <CardDescription>
                         Informasi yang bersifat opsional, anda dapat mengosongkannya.
                     </CardDescription>
-                    <CardContent>
-                        <div class="flex flex-row flex-wrap">
-                            <div class="w-1/4">
-                                <InputText name="phone" type="text" placeholder="No. Telepon" />
-                            </div>
-
-                            <div class="w-1/4">
-                                <InputText name="birth_place" type="text" placeholder="Tempat Lahir" />
-                            </div>
-
-                            <div class="w-1/4">
-                                <InputText name="birth_date" type="date" placeholder="Tanggal Lahir" />
-                            </div>
-
-                            <div class="w-1/4">
-                                <Select :options="genderOptions" placeholder="Jenis Kelamin" name="gender"/>
-                            </div>
-
-                            <div class="w-1/4">
-                                <Textarea placeholder="Alamat" name="address" />
-                            </div>
-
-                            <div class="w-1/4">
-                                <template v-if="isEdit">
-                                    <div class="flex flex-row">
-                                        <div class="w-2/12">
-                                            <div class="avatar avatar-xl">
-                                                <img :src="user.avatar" alt="Avatar">
-                                            </div>
-                                        </div>
-                                        <div class="w-10/12">
-                                            <input name="avatar" placeholder="Foto" type="file" />
-                                            <small class="fw-light">Biarkan kosong jika tidak ingin diganti.</small>
-                                        </div>
-                                    </div>
-                                </template>
-                                <template v-else>
-                                    <input name="avatar" placeholder="Foto" type="file" />
-                                </template>
-                            </div>
+                </CardHeader>
+                <CardContent class="pt-6 w-2/3 gap-3 flex flex-row pe-0">
+                    <div class="flex flex-col w-2/3 flex-wrap gap-3">
+                        <div class="w-full grid items-center gap-1.5">
+                            <Label for="phone">No. Telepon</Label>
+                            <Input name="phone" type="text" placeholder="0812322222" :error="form.errors.phone" v-model="form.phone"/>
                         </div>
-                    </CardContent>
-                </Card>
 
-                <!-- <template v-if="form.progress">
-                    <ProgressBar :value="form.progress.percentage"></ProgressBar>
-                </template> -->
+                        <div class="w-full grid items-center gap-1.5">
+                            <Label for="birth_place">Tempat Lahir</Label>
+                            <Input name="birth_place" type="text" placeholder="Jakarta" :error="form.errors.birth_place" v-model="form.birth_place" />
+                        </div>
 
+                        <div class="w-full grid items-center gap-1.5">
+                            <Label for="birth_date">Tanggal Lahir</Label>
+                            <Input name="birth_date" type="date" placeholder="10/10/1990" :error="form.errors.birth_date" v-model="form.birth_date" />
+                        </div>
+
+                        <div class="w-full grid items-center gap-1.5">
+                            <Label for="gender">Jenis Kelamin</Label>
+                            <Select id="gender" v-model="form.gender">
+                                <SelectTrigger :error="form.errors.gender">
+                                    <SelectValue placeholder="Pilih Jenis Kelamin" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectItem v-for="(v, i) in genderOptions" :value="v.value">
+                                            {{ v.label }}
+                                        </SelectItem>
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+                        </div>
+
+                        <div class="w-full grid items-center gap-1.5">
+                            <Label for="address">Alamat</Label>
+                            <Textarea placeholder="Alamat" name="address":error="form.errors.address" v-model="form.address" />
+                        </div>
+                    </div>
+                    <div class="w-1/3 mx-auto flex flex-col gap-3">
+                        <Label>Foto Profil</Label>
+                        <div class="mx-auto">
+                            <DropdownMenu>
+                                <DropdownMenuTrigger>
+                                    <div class="relative">
+                                        <Avatar size="lg">
+                                            <AvatarImage :src="typeof form.avatar === 'object' ? anu(form.avatar) : user.avatar" alt="Foto profil" />
+                                            <AvatarFallback>{{ form.name ? form.name.split(' ').map(n => n[0]).join('') : 'CN' }}</AvatarFallback>
+                                        </Avatar>
+                                        <Button variant="outline" class="absolute bottom-0 left-0">
+                                            Edit
+                                        </Button>
+                                    </div>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent class="w-56" side="bottom">
+                                    <DropdownMenuItem v-on:click="fileInputRef.click()">
+                                        <span>Upload foto</span>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem v-on:click="form.avatar = 'remove'">
+                                        <span>Hapus</span>
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </div>
+                        <p v-if="form.errors.avatar" class="text-red-600 dark:text-red-800 text-sm">{{ form.errors.avatar }}</p>
+                        <div class="hidden">
+                            <input type="file" @input="form.avatar = $event.target.files[0]" ref="fileInputRef"/>
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
+            <div class="flex flex-row justify-end gap-2 ps-4 items-center">
                 <Button type="submit" :disabled="form.processing">
                     {{ isEdit ? 'Update' : 'Simpan' }}
                 </Button>
@@ -245,8 +311,10 @@ const roleOptions = props?.user_roles?.map((role) => {
                     Simpan & Kembali
                 </Button>
 
-                <Button variant="link" severity="danger" :disabled="form.processing" :href="route('users.index')">Kembali</Button>
+                <Button variant="destructive" as-child :disabled="form.processing">
+                    <Link :href="route('users.index')">Kembali</Link>
+                </Button>
             </div>
-        </Form>
-    </div>
+        </div>
+    </form>
 </template>

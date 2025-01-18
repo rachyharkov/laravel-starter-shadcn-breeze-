@@ -11,7 +11,7 @@ class StoreUserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -28,12 +28,14 @@ class StoreUserRequest extends FormRequest
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'code' => ['required', 'string', 'max:255', 'unique:users,code'],
             // 'branch_id' => ['required', 'integer', 'exists:branches,id'],
+            'role_id' => ['required', 'integer', 'exists:roles,id'],
             'phone' => ['nullable', 'string', 'max:255', 'unique:users,phone'],
             'birth_place' => ['nullable', 'string', 'max:255'],
             'birth_date' => ['nullable', 'date', 'before:' . date('Y-m-d')],
             'address' => ['nullable', 'string'],
             'gender' => ['nullable'],
             'avatar' => ['nullable', 'image', 'max:2048'],
+            'is_active' => ['boolean']
         ];
     }
 }

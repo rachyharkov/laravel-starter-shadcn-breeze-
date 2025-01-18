@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\HandleInertiaRequests;
 use App\Providers\ViewComposerServiceProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\{Exceptions, Middleware};
@@ -15,7 +16,9 @@ return Application::configure(basePath: dirname(__DIR__))
         ViewComposerServiceProvider::class,
     ])
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        $middleware->web(append: [
+            HandleInertiaRequests::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

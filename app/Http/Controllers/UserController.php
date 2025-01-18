@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Users\StoreUserRequest;
+use App\Http\Requests\Users\UpdateUserRequest;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\UserRole;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Laravel\Facades\Image;
@@ -14,7 +16,7 @@ use Yajra\DataTables\Facades\DataTables;
 
 class UserController extends Controller
 {
-    protected string $avatarPath = 'public/uploads/images/avatars/';
+    protected string $avatarPath = 'uploads/images/avatars/';
     /**
      * Display a listing of the resource.
      */
@@ -43,7 +45,7 @@ class UserController extends Controller
                     if ($row->avatar == null) {
                         return 'https://www.gravatar.com/avatar/' . md5(strtolower(trim($row->email))) . '&s=500';
                     }
-                    return asset($this->avatarPath . $row->avatar);
+                    return $row->avatar;
                 })
                 ->toJson();
         }
@@ -56,34 +58,36 @@ class UserController extends Controller
      */
     public function create()
     {
-        $roles = UserRole::with('roles');
+        $roles = Role::all();
 
-        return Inertia::render('Users/Create', $roles);
+        return Inertia::render('Users/Create', [
+            'roles' => $roles
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreUserRequest $request)
+    public function store(StoreUserRequest $request) : RedirectResponse
     {
         $validated = $request->validated();
 
         // sementara role & branch dibuat null dulu
         // unset($validated['password_confirmation'], $validated['role_id'], $validated['branch_id']);
-        unset($validated['password_confirmation'], $validated['role_id']);
+        unset($validated['password_confirmation']);
 
         if ($request->file('avatar') && $request->file('avatar')->isValid()) {
 
             $filename = $request->file('avatar')->hashName();
 
-            if (!Storage::disk('local')->exists($this->avatarPath)) {
-                Storage::disk('local')->makeDirectory($this->avatarPath);
+            if (!Storage::disk('public')->exists($this->avatarPath)) {
+                Storage::disk('public')->makeDirectory($this->avatarPath);
             }
 
-            Image::make($request->file('avatar')->getRealPath())->resize(500, 500, function ($constraint) {
-                $constraint->aspectRatio();
-                $constraint->upsize();
-            })->save(storage_path('app/' . $this->avatarPath . $filename));
+            Image::read($request->file('avatar')
+                ->getRealPath())
+                ->scale(500)
+                ->save(storage_path('app/public/' . $this->avatarPath . $filename));
 
             $validated['avatar'] = $filename;
         }
@@ -94,13 +98,14 @@ class UserController extends Controller
         if (isset($validated['role_id'])) {
             UserRole::create([
                 'user_id' => $user->id,
-                'role_id' => $validated['role_id']
+                'role_id' => $validated['role_id'],
+                'is_active' => $validated['is_active']
             ]);
         }
 
-        flash()->success('Data berhasil ditambahkan');
+        session()->flash('success','Pengguna '.$user->name.' berhasil ditambahkan');
 
-        return redirect('users.index');
+        return to_route('users.index');
     }
 
     /**
@@ -116,8 +121,9 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        $user->load('roles:id,name');
-        $user->role_id = isset($user->roles[0]) ? $user->roles[0]->id : '';
+        $user->load('user_roles.role:id,name');
+        $user->role_id      = isset($user->user_roles[0]->role_id) ? $user->user_roles[0]->role_id : '';
+        $user->is_active    = $user->user_roles[0]->is_active;
 
         $roles = Role::all();
 
@@ -127,9 +133,11 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(User $user, UpdateUserRequest $request): RedirectResponse
     {
         $validated = $request->validated();
+
+        // dd($validated);
 
         // sementara role & branch dibuat null dulu
         unset($validated['password_confirmation'], $validated['branch_id']);
@@ -137,16 +145,20 @@ class UserController extends Controller
         if ($request->file('avatar') && $request->file('avatar')->isValid()) {
             $filename = $request->file('avatar')->hashName();
 
-            if (!Storage::disk('local')->exists($this->avatarPath)) {
-                Storage::disk('local')->makeDirectory($this->avatarPath);
+            if (!Storage::disk('public')->exists($this->avatarPath)) {
+                Storage::disk('public')->makeDirectory($this->avatarPath);
             }
 
-            Image::read($request->file('avatar')->getRealPath())
-                ->resize(500, 500)
-                ->save(storage_path('app/' . $this->avatarPath . $filename));
+            Image::read($request->file('avatar')
+                ->getRealPath())
+                ->scale(500)
+                ->save(storage_path('app/public/' . $this->avatarPath . $filename));
 
-            if ($user->avatar != null && Storage::disk('local')->exists($oldAvatar = $this->avatarPath . $user->avatar)) {
-                Storage::disk('local')->delete($oldAvatar);
+            if (
+                $user->avatar != null &&
+                Storage::disk('public')->exists($oldAvatar = $this->avatarPath . basename($user->avatar))
+            ) {
+                Storage::disk('public')->delete($oldAvatar);
             }
 
             $validated['avatar'] = $filename;
@@ -164,8 +176,9 @@ class UserController extends Controller
 
         if (isset($validated['role_id'])) {
             UserRole::create([
-            'user_id' => $user->id,
-            'role_id' => $validated['role_id']
+                'user_id' => $user->id,
+                'role_id' => $validated['role_id'],
+                'is_active' => $validated['is_active']
             ]);
         }
 
@@ -178,9 +191,9 @@ class UserController extends Controller
             return redirect()->back()->with('flash', $flash);
         }
 
-        flash()->success('Data berhasil diubah');
+        session()->flash('success','Data pengguna '. $user->name .' berhasil diperbaharui');
 
-        return redirect('users.index');
+        return to_route('users.index');
     }
 
     /**
@@ -188,16 +201,19 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        if ($user->avatar != null && Storage::disk('local')->exists($oldAvatar = $this->avatarPath . $user->avatar)) {
-            Storage::disk('local')->delete($oldAvatar);
+        if (
+            $user->avatar != null &&
+            Storage::disk('public')->exists($oldAvatar = $this->avatarPath . basename($user->avatar))
+        ) {
+            Storage::disk('public')->delete($oldAvatar);
         }
 
         $user->delete();
 
         UserRole::where('user_id', $user->id)->delete();
 
-        flash()->success('Data berhasil dihapus');
+        session()->flash('success', 'Pengguna '. $user->name . ' berhasil dihapus');
 
-        return to_route('users.index', [], 303);
+        return to_route('users.index');
     }
 }

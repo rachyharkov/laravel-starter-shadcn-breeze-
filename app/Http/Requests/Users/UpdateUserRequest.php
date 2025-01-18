@@ -12,7 +12,7 @@ class UpdateUserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -29,12 +29,14 @@ class UpdateUserRequest extends FormRequest
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
             'code' => ['required', 'string', 'max:255', Rule::unique('users', 'code')->ignore($this->user)],
             // 'branch_id' => ['required', 'integer', 'exists:branches,id'],
+            'role_id' => ['required', 'integer', 'exists:roles,id'],
             'phone' => ['nullable', 'string', 'max:255', Rule::unique('users', 'phone')->ignore($this->user)],
             'birth_place' => ['nullable', 'string', 'max:255'],
             'birth_date' => ['nullable', 'date', 'before:' . date('Y-m-d')],
             'address' => ['nullable', 'string'],
             'gender' => ['nullable'],
             'avatar' => ['nullable', 'image', 'max:2048'],
+            'is_active' => ['boolean']
         ];
     }
 }

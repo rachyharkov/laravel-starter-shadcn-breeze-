@@ -27,28 +27,33 @@ const toggle = () => {
     }
 }
 
-defineProps([
+const props = defineProps([
     "title",
     "breadcrumb",
-    "description"
+    "description",
+    "isolated"
 ]);
 </script>
 
 <template>
     <Head :title="title" />
-    <header class="flex flex-row items-center justify-between w-full px-3">
+    <header class="flex flex-row items-center justify-between w-full pt-3" :class="{'px-4': isolated === true }">
         <div class="flex flex-row items-center">
-            <Button variant="ghost" @click="toggle">
+            <Button variant="ghost" @click="toggle" v-if="isolated !== true">
                 <iconify-icon icon="lucide:chevron-left" :class="{ 'rotate-180': !tgstatus }" />
             </Button>
-            <div class="w-px h-12 bg-gray-200 dark:bg-gray-800 mx-2"></div>
+            <div class="w-px h-12 bg-gray-200 dark:bg-gray-800 mx-2" v-if="isolated !== true"></div>
             <div class="flex flex-col justify-start ms-2">
                 <Breadcrumb>
                     <BreadcrumbList>
                         <BreadcrumbItem v-for="(crumb, index) in breadcrumb" :key="index">
-                            <BreadcrumbLink :href="crumb.href">
-                                {{ crumb.label }}
-                            </BreadcrumbLink>
+                            <template v-if="crumb.currentPage">
+                                <span>{{ crumb.label }}</span>
+                            </template>
+                            <template v-else>
+                                <Link :href="crumb.href">{{ crumb.label }}</Link>
+                            </template>
+                            <BreadcrumbSeparator v-if="index < breadcrumb.length - 1" />
                         </BreadcrumbItem>
                     </BreadcrumbList>
                 </Breadcrumb>
@@ -62,8 +67,8 @@ defineProps([
             <DropdownMenu>
                 <DropdownMenuTrigger>
                     <Avatar class="w-9 h-9 align-middle">
-                        <AvatarImage src="https://github.com/radix-vue.png" alt="@radix-vue" />
-                        <AvatarFallback>CN</AvatarFallback>
+                        <AvatarImage :src="$page.props.auth.user.avatar" alt="@radix-vue" />
+                        <AvatarFallback>WA</AvatarFallback>
                     </Avatar>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">

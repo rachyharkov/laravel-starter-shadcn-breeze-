@@ -16,7 +16,7 @@
         <Card class="h-full transition-all">
             <CardHeader class="flex flex-row items-center gap-2">
                 <ApplicationLogo class="w-10 h-10" />
-                <h2 class="font-bold text-3xl">LARAVEL</h2>
+                <h2 class="font-bold text-3xl">APPNAME</h2>
             </CardHeader>
             <CardContent>
                 <div class="flex flex-col items-start gap-3">
