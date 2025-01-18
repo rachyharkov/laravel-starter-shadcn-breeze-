@@ -104,11 +104,11 @@ const anu = (a) => {
 
 <template>
     <div class="w-full" v-if="$page?.props?.flash">
-        <Alert variant="destructive">
-            <iconify-icon icon="lucide:circle-alert" class="w-4 h-4"/>
-            <AlertTitle>Perhatian</AlertTitle>
+        <Alert :variant="$page.props.messages.envelopes[0].type" class="mt-4" v-if="$page.props.messages.envelopes.length > 0">
+            <iconify-icon icon="lucide:check" class="w-4 h-4"/>
+            <AlertTitle>{{$page.props.messages.envelopes[0].title}}</AlertTitle>
             <AlertDescription>
-                $page.props.flash.message
+                {{$page.props.messages.envelopes[0].message}}
             </AlertDescription>
         </Alert>
     </div>

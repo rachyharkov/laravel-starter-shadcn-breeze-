@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MasterData\RoleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\MasterData\UserController;
 use Illuminate\Foundation\Application;
@@ -26,6 +27,7 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('master-data')->group(function() {
         Route::resource('users', UserController::class);
+        Route::resource('roles', RoleController::class);
     });
 });
 

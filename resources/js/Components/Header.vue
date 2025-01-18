@@ -72,11 +72,12 @@ const props = defineProps([
                     </Avatar>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                    <DropdownMenuLabel class="flex flex-col space-y-1">
+                        <p class="text-sm font-medium leading-none">{{ $page.props.auth.user.name }}</p>
+                        <p class="text-xs leading-none text-muted-foreground">{{ $page.props.auth.user.email }}</p>
+                    </DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem>Profile</DropdownMenuItem>
-                    <DropdownMenuItem>Billing</DropdownMenuItem>
-                    <DropdownMenuItem>Team</DropdownMenuItem>
                     <DropdownMenuItem>
                         <Link :href="route('logout')" method="post" as="button" class="w-full text-start">Keluar</Link>
                     </DropdownMenuItem>

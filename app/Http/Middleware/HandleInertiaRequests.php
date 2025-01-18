@@ -33,6 +33,9 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'auth' => [
                 'user' => $request->user(),
+                'current_role_session' => function () use ($request) {
+                    return $request->session()->get('current_role_session');
+                },
             ],
             'messages' => flash()->render('array'),
         ];

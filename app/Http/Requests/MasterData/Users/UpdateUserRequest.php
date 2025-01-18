@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Users;
+namespace App\Http\Requests\MasterData\Users;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class StoreUserRequest extends FormRequest
+class UpdateUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,13 +24,13 @@ class StoreUserRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'username' => ['required', 'string', 'max:255', 'unique:users,username'],
-            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'code' => ['required', 'string', 'max:255', 'unique:users,code'],
+            'username' => ['required', 'string', 'max:255', Rule::unique('users', 'username')->ignore($this->user)],
+            'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($this->user)],
+            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
+            'code' => ['required', 'string', 'max:255', Rule::unique('users', 'code')->ignore($this->user)],
             // 'branch_id' => ['required', 'integer', 'exists:branches,id'],
             'role_id' => ['required', 'integer', 'exists:roles,id'],
-            'phone' => ['nullable', 'string', 'max:255', 'unique:users,phone'],
+            'phone' => ['nullable', 'string', 'max:255', Rule::unique('users', 'phone')->ignore($this->user)],
             'birth_place' => ['nullable', 'string', 'max:255'],
             'birth_date' => ['nullable', 'date', 'before:' . date('Y-m-d')],
             'address' => ['nullable', 'string'],

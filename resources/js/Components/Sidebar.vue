@@ -14,9 +14,15 @@
 <template>
     <div class="p-3 w-72 shrink-0 sticky overflow-hidden transition-all duration-300 data-[show=true]:w-0 data-[show=true]:p-0" id="sidebar" data-show="false">
         <Card class="h-full transition-all">
-            <CardHeader class="flex flex-row items-center gap-2">
-                <ApplicationLogo class="w-10 h-10" />
-                <h2 class="font-bold text-3xl">APPNAME</h2>
+            <CardHeader class="flex flex-col space-y-2">
+                <div class="flex flex-row items-center gap-2">
+                    <ApplicationLogo class="w-10 h-10" />
+                    <h2 class="font-bold text-3xl">APPNAME</h2>
+                </div>
+                <div class="flex flex-col space-y-2 rounded-md border-gray-200 dark:border-gray-800 border p-2">
+                    <p class="text-sm font-medium leading-none text-muted-foreground">Anda login sebagai</p>
+                    <p class="text-base leading-none">{{ $page.props.auth.current_role_session.name }}</p>
+                </div>
             </CardHeader>
             <CardContent>
                 <div class="flex flex-col items-start gap-3">
@@ -31,8 +37,10 @@
                                 <iconify-icon icon="lucide:database" class="text-lg mr-2"/>Master Data
                             </AccordionSidebarTrigger>
                             <AccordionSidebarContent>
-                                <Button size="lg" variant="ghost" class="w-full flex flex-row items-center justify-start ps-11">
-                                    Peran
+                                <Button size="lg" class="w-full p-0 w-full" :variant="route().current('roles.index') || $page.url.startsWith('/master-data/roles') ? '' : 'ghost'">
+                                    <Link :href="$route('roles.index')" class="ps-11 w-full h-full flex items-center">
+                                        Peran
+                                    </Link>
                                 </Button>
                                 <Button size="lg" class="w-full p-0 w-full" :variant="route().current('users.index') || $page.url.startsWith('/master-data/users') ? '' : 'ghost'">
                                     <Link :href="$route('users.index')" class="ps-11 w-full h-full flex items-center">

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\MasterData;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Users\StoreUserRequest;
-use App\Http\Requests\Users\UpdateUserRequest;
+use App\Http\Requests\MasterData\Users\StoreUserRequest;
+use App\Http\Requests\MasterData\Users\UpdateUserRequest;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\UserRole;
@@ -48,10 +48,13 @@ class UserController extends Controller
                     }
                     return $row->avatar;
                 })
+                ->with([
+                    'is_admin_more_than_one' =>  isAdminMoreThanOne()
+                ])
                 ->toJson();
         }
 
-        return Inertia::render('Users/Index');
+        return Inertia::render('MasterData/Users/Index');
     }
 
     /**
@@ -61,7 +64,7 @@ class UserController extends Controller
     {
         $roles = Role::all();
 
-        return Inertia::render('Users/Create', [
+        return Inertia::render('MasterData/Users/Create', [
             'roles' => $roles
         ]);
     }
@@ -114,7 +117,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return Inertia::render('Users/Show', compact('user'));
+        return Inertia::render('MasterData/Users/Show', compact('user'));
     }
 
     /**
@@ -128,7 +131,7 @@ class UserController extends Controller
 
         $roles = Role::all();
 
-        return Inertia::render('Users/Edit', compact('user', 'roles'));
+        return Inertia::render('MasterData/Users/Edit', compact('user', 'roles'));
     }
 
     /**
@@ -204,18 +207,23 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        if (
-            $user->avatar != null &&
-            Storage::disk('public')->exists($oldAvatar = $this->avatarPath . basename($user->avatar))
-        ) {
-            Storage::disk('public')->delete($oldAvatar);
+        try {
+
+            if (
+                $user->avatar != null &&
+                Storage::disk('public')->exists($oldAvatar = $this->avatarPath . basename($user->avatar))
+            ) {
+                Storage::disk('public')->delete($oldAvatar);
+            }
+
+            $user->delete();
+
+            UserRole::where('user_id', $user->id)->delete();
+
+            session()->flash('success', 'Pengguna '. $user->name . ' berhasil dihapus');
+        } catch (\Exception $e) {
+            session()->flash('error', 'Terjadi kesalahan saat menghapus pengguna: ' . $e->getMessage());
         }
-
-        $user->delete();
-
-        UserRole::where('user_id', $user->id)->delete();
-
-        session()->flash('success', 'Pengguna '. $user->name . ' berhasil dihapus');
 
         return to_route('users.index');
     }
