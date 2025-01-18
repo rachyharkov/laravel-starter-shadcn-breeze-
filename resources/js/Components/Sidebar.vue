@@ -34,7 +34,7 @@
                                 <Button size="lg" variant="ghost" class="w-full flex flex-row items-center justify-start ps-11">
                                     Peran
                                 </Button>
-                                <Button size="lg" class="w-full p-0 w-full" :variant="route().current('users.index') ? '' : 'ghost'">
+                                <Button size="lg" class="w-full p-0 w-full" :variant="route().current('users.index') || $page.url.startsWith('/master-data/users') ? '' : 'ghost'">
                                     <Link :href="$route('users.index')" class="ps-11 w-full h-full flex items-center">
                                         Pengguna
                                     </Link>

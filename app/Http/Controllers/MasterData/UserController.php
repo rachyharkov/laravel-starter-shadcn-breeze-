@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\MasterData;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Users\StoreUserRequest;
 use App\Http\Requests\Users\UpdateUserRequest;
 use App\Models\Role;
@@ -162,6 +163,8 @@ class UserController extends Controller
             }
 
             $validated['avatar'] = $filename;
+        } else {
+            unset($validated['avatar']);
         }
 
         if ($request->password != null) {

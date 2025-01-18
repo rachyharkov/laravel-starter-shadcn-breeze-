@@ -28,18 +28,14 @@ const breadcrumb = [
             <div class="avatar avatar-xl">
                 <img :src="user.avatar" alt="Avatar" class="w-40" />
             </div>
-            <Card>
-                <CardContent class="pt-6">
-                    <Table>
-                        <TableBody>
-                            <TableRow v-for="(v, i) in Object.entries(user)" :key="i">
-                                <TableCell class="font-medium">{{ v[0] }}</TableCell>
-                                <TableCell>{{ v[1] }}</TableCell>
-                            </TableRow>
-                        </TableBody>
-                    </Table>
-                </CardContent>
-            </Card>
+            <Table>
+                <TableBody>
+                    <TableRow v-for="(v, i) in Object.entries(user)" :key="i">
+                        <TableCell class="font-medium">{{ v[0] }}</TableCell>
+                        <TableCell>{{ v[1] }}</TableCell>
+                    </TableRow>
+                </TableBody>
+            </Table>
         </div>
     </AuthenticatedLayout>
 </template>
