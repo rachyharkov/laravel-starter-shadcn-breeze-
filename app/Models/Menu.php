@@ -5,9 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
-class Role extends Model
+class Menu extends Model
 {
     use HasFactory;
 
@@ -16,14 +15,14 @@ class Role extends Model
      *
      * @var string
      */
-    protected $table = 'roles';
+    protected $table = 'menus';
 
     /**
      * The attributes that are mass assignable.
      *
      * @var string[]
      */
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'route', 'icon', 'position'];
 
     /**
      * Get the attributes that should be cast.
@@ -32,16 +31,11 @@ class Role extends Model
      */
     protected function casts(): array
     {
-        return ['name' => 'string', 'created_at' => 'datetime:Y-m-d H:i:s', 'updated_at' => 'datetime:Y-m-d H:i:s'];
+        return ['name' => 'string', 'route' => 'string', 'icon' => 'string', 'position' => 'integer', 'created_at' => 'datetime:Y-m-d H:i:s', 'updated_at' => 'datetime:Y-m-d H:i:s'];
     }
 
-    public function menu_access_rights(): HasMany
+    public function menu_sub(): HasMany
     {
-        return $this->hasMany(MenuAccessRight::class, 'role_id');
+        return $this->hasMany(MenuSub::class);
     }
-
-    // public function menu(): HasManyThrough
-    // {
-    //     return $this->hasManyThrough(Menu::class, MenuAccessRight::class, 'role_id', 'menu_id');
-    // }
 }

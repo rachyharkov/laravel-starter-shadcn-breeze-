@@ -8,12 +8,12 @@ const breadcrumb = [
     {
         label: 'Pengguna',
         currentPage: false,
-        href: route('users.index')
+        href: route('master-data.users.index')
     },
     {
         label: props.user.name,
         currentPage: false,
-        href: route('users.show', props.user.id)
+        href: route('master-data.users.show', props.user.id)
     },
     {
         label: 'Edit',

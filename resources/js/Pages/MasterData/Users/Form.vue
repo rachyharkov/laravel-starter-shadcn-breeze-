@@ -51,12 +51,12 @@ const saveAndback = () => {
 
 const save = () => {
     if (isEdit) {
-        form.post(route('users.update', props?.user?.id), {
+        form.post(route('master-data.users.update', props?.user?.id), {
             preserveScroll: true
         })
     } else {
         form._method = 'post'
-        form.post(route('users.store'), {
+        form.post(route('master-data.users.store'), {
             preserveScroll: true,
             onSuccess: () => {
                 form.reset()
@@ -312,7 +312,7 @@ const anu = (a) => {
                 </Button>
 
                 <Button variant="destructive" as-child :disabled="form.processing">
-                    <Link :href="route('users.index')">Kembali</Link>
+                    <Link :href="route('master-data.users.index')">Kembali</Link>
                 </Button>
             </div>
         </div>

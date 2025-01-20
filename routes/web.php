@@ -16,18 +16,19 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::prefix('master-data')->group(function() {
-        Route::resource('users', UserController::class);
-        Route::resource('roles', RoleController::class);
+    Route::get('/dashboard', function () {
+        return Inertia::render('Dashboard');
+    })->name('dashboard');
+
+    Route::prefix('master-data')->as('master-data.')->group(function() {
+        Route::resource('users', UserController::class)->middleware('check_access');
+        Route::resource('roles', RoleController::class)->middleware('check_access');
     });
 });
 

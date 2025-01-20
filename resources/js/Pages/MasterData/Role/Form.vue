@@ -35,12 +35,12 @@ const saveAndback = () => {
 
 const save = () => {
     if (isEdit) {
-        form.post(route('roles.update', props?.role?.id), {
+        form.post(route('master-data.roles.update', props?.role?.id), {
             preserveScroll: true
         })
     } else {
         form._method = 'post'
-        form.post(route('roles.store'), {
+        form.post(route('master-data.roles.store'), {
             preserveScroll: true,
             onSuccess: () => {
                 form.reset()
@@ -97,7 +97,7 @@ const save = () => {
                 </Button>
 
                 <Button variant="destructive" as-child :disabled="form.processing">
-                    <Link :href="route('roles.index')">Kembali</Link>
+                    <Link :href="route('master-data.roles.index')">Kembali</Link>
                 </Button>
             </div>
         </div>

@@ -26,30 +26,31 @@
             </CardHeader>
             <CardContent>
                 <div class="flex flex-col items-start gap-3">
-                    <Button size="lg" class="w-full justify-start p-0" :variant="route().current('dashboard') ? '' : 'ghost'">
-                        <Link :href="$route('dashboard')" class="inline-flex h-full w-full flex-row items-center px-4">
-                            <iconify-icon icon="lucide:chart-area" class="text-lg mr-2"/> Dashboard
-                        </Link>
-                    </Button>
-                    <AccordionSidebar type="single" collapsible class="w-full" default-value="item-1">
-                        <AccordionSidebarItem value="item-1">
-                            <AccordionSidebarTrigger>
-                                <iconify-icon icon="lucide:database" class="text-lg mr-2"/>Master Data
-                            </AccordionSidebarTrigger>
-                            <AccordionSidebarContent>
-                                <Button size="lg" class="w-full p-0 w-full" :variant="route().current('roles.index') || $page.url.startsWith('/master-data/roles') ? '' : 'ghost'">
-                                    <Link :href="$route('roles.index')" class="ps-11 w-full h-full flex items-center">
-                                        Peran
-                                    </Link>
-                                </Button>
-                                <Button size="lg" class="w-full p-0 w-full" :variant="route().current('users.index') || $page.url.startsWith('/master-data/users') ? '' : 'ghost'">
-                                    <Link :href="$route('users.index')" class="ps-11 w-full h-full flex items-center">
-                                        Pengguna
-                                    </Link>
-                                </Button>
-                            </AccordionSidebarContent>
-                        </AccordionSidebarItem>
-                    </AccordionSidebar>
+                    <template v-for="(v, i) in $page.props.auth.menu_access_right">
+                        <template v-if="v.menu_sub_access_right.length > 0">
+                            <AccordionSidebar type="single" collapsible class="w-full" default-value="item-1">
+                                <AccordionSidebarItem value="item-1">
+                                    <AccordionSidebarTrigger>
+                                        <iconify-icon :icon="v.menu.icon" class="text-lg mr-2"/>{{ v.menu.name }}
+                                    </AccordionSidebarTrigger>
+                                    <AccordionSidebarContent>
+                                        <Button v-for="(vsm, ksm) in v.menu_sub_access_right" :key="ksm" size="lg" class="w-full p-0 w-full" :variant="$page.url.startsWith(`/${v.menu.route}/${vsm.menu_sub.route}`) ? '' : 'ghost'">
+                                            <Link :href="$route(`${v.menu.route}.${vsm.menu_sub.route}.index`)" class="ps-11 w-full h-full flex items-center">
+                                                {{ vsm.menu_sub.name }}
+                                            </Link>
+                                        </Button>
+                                    </AccordionSidebarContent>
+                                </AccordionSidebarItem>
+                            </AccordionSidebar>
+                        </template>
+                        <template v-else>
+                            <Button size="lg" class="w-full justify-start p-0" :variant="$page.url.startsWith(`/${v.menu.route}`) ? '' : 'ghost'">
+                                <Link :href="$route(v.menu.route)" class="inline-flex h-full w-full flex-row items-center px-4">
+                                    <iconify-icon :icon="v.menu.icon" class="text-lg mr-2"/> {{ v.menu.name }}
+                                </Link>
+                            </Button>
+                        </template>
+                    </template>
                 </div>
             </CardContent>
         </Card>

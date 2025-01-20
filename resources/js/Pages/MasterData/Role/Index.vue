@@ -21,7 +21,7 @@ const table = ref();
 const search_keyword = ref(null)
 
 const deleteData = (id) => {
-    router.delete(route('roles.destroy', id), {
+    router.delete(route('master-data.roles.destroy', id), {
         preserveScroll: true,
         preserveState: true,
         onBefore: () => confirm('Anda yakin ingin menghapus?'),
@@ -33,7 +33,7 @@ const options = {
     processing: true,
     serverSide: true,
     responsive: true,
-    ajax: route('roles.index'),
+    ajax: route('master-data.roles.index'),
     columns: [{
             title:'Nama',
             data: 'name',
@@ -84,14 +84,14 @@ watch(search_keyword, (newValue) => {
             <div class="flex flex-row justify-between items-center mt-4">
                 <Input v-model="search_keyword" placeholder="Ketik Pencarian disini"/>
                 <Button as-child>
-                    <Link :href="route('roles.create')">Tambah Baru</Link>
+                    <Link :href="route('master-data.roles.create')">Tambah Baru</Link>
                 </Button>
             </div>
             <DataTable :options="options" ref="table">
                 <template #column-action="props">
                     <div class="flex flex-row items-center justify-end gap-1">
                         <Button variant="secondary" size="sm" asChild>
-                            <Link :href="route('roles.edit', props.rowData.id)">
+                            <Link :href="route('master-data.roles.edit', props.rowData.id)">
                                 <iconify-icon icon="lucide:file-pen-line"/> Edit
                             </Link>
                         </Button>

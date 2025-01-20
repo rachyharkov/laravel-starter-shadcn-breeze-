@@ -22,7 +22,7 @@ const search_keyword = ref(null)
 const is_admin_morethan_one = ref(false)
 
 const deleteData = (id) => {
-    router.delete(route('users.destroy', id), {
+    router.delete(route('master-data.users.destroy', id), {
         preserveScroll: true,
         preserveState: true,
         onBefore: () => confirm('Anda yakin ingin menghapus?'),
@@ -35,7 +35,7 @@ const options = {
     serverSide: true,
     responsive: true,
     ajax: {
-        url: route('users.index'),
+        url: route('master-data.users.index'),
         dataSrc: function(json) {
             is_admin_morethan_one.value = json.is_admin_more_than_one
             return json.data
@@ -102,7 +102,7 @@ watch(search_keyword, (newValue) => {
             <div class="flex flex-row justify-between items-center mt-4">
                 <Input v-model="search_keyword" placeholder="Ketik Pencarian disini"/>
                 <Button as-child>
-                    <Link :href="route('users.create')">Tambah Baru</Link>
+                    <Link :href="route('master-data.users.create')">Tambah Baru</Link>
                 </Button>
             </div>
             <DataTable :options="options" ref="table">
@@ -113,7 +113,7 @@ watch(search_keyword, (newValue) => {
                             <AvatarFallback>{{ props.rowData.name ? props.rowData.name.split(' ').slice(0, 2).map(n => n[0]).join('') : 'CN' }}</AvatarFallback>
                         </Avatar>
                         <span>
-                            <Link :href="route('users.show', props.rowData.id)">{{ props.rowData.name }}</Link>
+                            <Link :href="route('master-data.users.show', props.rowData.id)">{{ props.rowData.name }}</Link>
                         </span>
                     </div>
                 </template>
@@ -130,7 +130,7 @@ watch(search_keyword, (newValue) => {
                 <template #column-action="props">
                     <div class="flex flex-row items-center gap-1">
                         <Button variant="secondary" size="sm" asChild>
-                            <Link :href="route('users.edit', props.rowData.id)">
+                            <Link :href="route('master-data.users.edit', props.rowData.id)">
                                 <iconify-icon icon="lucide:file-pen-line"/> Edit
                             </Link>
                         </Button>

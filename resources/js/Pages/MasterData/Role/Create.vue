@@ -10,7 +10,7 @@ const breadcrumb = [
     {
         label: 'Peran',
         currentPage: false,
-        href: route('roles.index')
+        href: route('master-data.roles.index')
     },
     {
         label: 'Tambah Baru',

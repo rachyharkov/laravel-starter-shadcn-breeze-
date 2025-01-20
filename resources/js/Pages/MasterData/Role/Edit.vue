@@ -8,12 +8,12 @@ const breadcrumb = [
     {
         label: 'peran',
         currentPage: false,
-        href: route('roles.index')
+        href: route('master-data.roles.index')
     },
     {
         label: props.role.name,
         currentPage: false,
-        href: route('roles.show', props.role.id)
+        href: route('master-data.roles.show', props.role.id)
     },
     {
         label: 'Edit',
