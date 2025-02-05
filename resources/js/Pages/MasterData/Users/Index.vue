@@ -100,7 +100,7 @@ watch(search_keyword, (newValue) => {
                 </AlertDescription>
             </Alert>
             <div class="flex flex-row justify-between items-center mt-4">
-                <Input v-model="search_keyword" placeholder="Ketik Pencarian disini"/>
+                <Input v-model="search_keyword" type="text" placeholder="Ketik Pencarian disini"/>
                 <Button as-child>
                     <Link :href="route('master-data.users.create')">Tambah Baru</Link>
                 </Button>

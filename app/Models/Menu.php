@@ -38,4 +38,9 @@ class Menu extends Model
     {
         return $this->hasMany(MenuSub::class);
     }
+
+    public function module_action(): HasMany
+    {
+        return $this->hasMany(ModuleAction::class);
+    }
 }

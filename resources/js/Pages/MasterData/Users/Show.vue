@@ -13,7 +13,7 @@ const breadcrumb = [
     {
         label: "Users",
         currentPage: false,
-        href: route("users.index"),
+        href: route("master-data.users.index"),
     },
     {
         label: props.user.name,

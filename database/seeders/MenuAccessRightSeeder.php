@@ -22,7 +22,7 @@ class MenuAccessRightSeeder extends Seeder
                     ],
                     [
                         'id' => 2,
-                        'submenus' => [1,2]
+                        'submenus' => [1,2,3]
                     ]
                 ]
             ],

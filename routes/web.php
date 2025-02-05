@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MasterData\AccessController;
 use App\Http\Controllers\MasterData\RoleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\MasterData\UserController;
@@ -29,6 +30,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('master-data')->as('master-data.')->group(function() {
         Route::resource('users', UserController::class)->middleware('check_access');
         Route::resource('roles', RoleController::class)->middleware('check_access');
+        Route::resource('accesses', AccessController::class)->middleware('check_access');
     });
 });
 

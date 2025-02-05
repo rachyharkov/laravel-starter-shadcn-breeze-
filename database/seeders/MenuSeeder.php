@@ -93,6 +93,28 @@ class MenuSeeder extends Seeder
                             ],
                         ]
                     ],
+                    [
+                        'name'      => 'Hak Akses',
+                        'route'     => 'accesses',
+                        'actions'   => [
+                            [
+                                'action' => 'index',
+                                'keterangan' => 'Lihat daftar hak akses'
+                            ],
+                            [
+                                'action' => 'edit',
+                                'keterangan' => 'Edit akses'
+                            ],
+                            [
+                                'action' => 'update',
+                                'keterangan' => 'Update akses'
+                            ],
+                            [
+                                'action' => 'destroy',
+                                'keterangan' => 'hapus akses'
+                            ],
+                        ]
+                    ],
                 ]
             ],
         ];

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class MenuSub extends Model
 {
@@ -38,5 +39,10 @@ class MenuSub extends Model
 	{
 		return $this->belongsTo(\App\Models\Menu::class);
 	}
+
+    public function module_action(): HasMany
+    {
+        return $this->hasMany(ModuleAction::class);
+    }
 
 }
