@@ -23,7 +23,7 @@ class Role extends Model
      *
      * @var string[]
      */
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'description', 'is_active', 'color'];
 
     /**
      * Get the attributes that should be cast.
@@ -32,7 +32,7 @@ class Role extends Model
      */
     protected function casts(): array
     {
-        return ['name' => 'string', 'created_at' => 'datetime:Y-m-d H:i:s', 'updated_at' => 'datetime:Y-m-d H:i:s'];
+        return ['name' => 'string', 'created_at' => 'datetime:Y-m-d H:i:s', 'updated_at' => 'datetime:Y-m-d H:i:s', 'is_active' => 'boolean', 'color' => 'string'];
     }
 
     public function menu_access_rights(): HasMany

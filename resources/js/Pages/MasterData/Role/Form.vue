@@ -25,6 +25,9 @@ const fileInputRef = ref()
 const form = useForm('UpdateRole', {
     _method: 'put',
     name: props?.role?.name ?? '',
+    description: props?.role?.description ?? '',
+    is_active: props?.role?.is_active ?? true,
+    color: props?.role?.color ?? '#000000',
     save_and_back: false,
 })
 
@@ -77,11 +80,39 @@ const save = () => {
                         Nama ini digunakan untuk mengidentifikasi sekelompok pengguna yang memiliki peran ini
                     </CardDescription>
                 </CardHeader>
-                <CardContent class="pt-6 max-w-lg w-full">
+                <CardContent class="pt-6 max-w-lg w-full flex flex-col gap-5">
                     <div class="flex flex-col flex-wrap gap-3">
-                        <div class="grid items-center gap-1.5">
+                        <div class="grid items-center gap-2">
                             <Label for="name">Nama</Label>
                             <Input id="name" type="text" placeholder="John Doe" :error="form.errors.name" v-model="form.name" />
+                        </div>
+                    </div>
+                    <div class="flex flex-col flex-wrap gap-3">
+                        <div class="grid items-center gap-2">
+                            <Label for="description">Deskripsi</Label>
+                            <Input id="description" type="text" placeholder="John Doe" :error="form.errors.description" v-model="form.description" />
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
+            <Card class="flex flex-row">
+                <CardHeader class="w-1/3">
+                    <CardTitle>Indikator/Status</CardTitle>
+                    <CardDescription>
+                        Tentukan warna dan status berjalan atau tidaknya peran ini
+                    </CardDescription>
+                </CardHeader>
+                <CardContent class="pt-6 max-w-lg w-full flex flex-col gap-5">
+                    <div class="flex flex-col flex-wrap gap-3">
+                        <div class="grid items-center gap-2">
+                            <Label for="color">Warna Indikator</Label>
+                            <Input id="color" type="color" placeholder="John Doe" class="justify-self-start w-48" :error="form.errors.color" v-model="form.color" />
+                        </div>
+                    </div>
+                    <div class="flex flex-col flex-wrap gap-3">
+                        <div class="grid items-center gap-2">
+                            <Label for="description">Status</Label>
+                            <Switch v-model="form.is_active" />
                         </div>
                     </div>
                 </CardContent>

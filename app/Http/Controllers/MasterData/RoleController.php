@@ -21,6 +21,9 @@ class RoleController extends Controller
             $roles = Role::all();
 
             return DataTables::of($roles)
+                ->addColumn('description', function ($role) {
+                    return '<span class="whitespace-nowrap">' . $role->description . '</span>';
+                })
                 ->toJson();
         }
 

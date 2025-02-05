@@ -28,10 +28,16 @@ class RoleSeeder extends Seeder
         // Role::factory()->count(10)->create();
 
         Role::create([
-            'name' => 'Admin'
+            'name' => 'Admin',
+            'description' => 'Peran ini mengatur semua hal yang berhubungan dengan operasional aplikasi',
+            'is_active' => true,
+            'color' => '#500073'
         ]);
         Role::create([
-            'name' => 'Focal Point'
+            'name' => 'Focal Point',
+            'description' => 'Peran ini bertugas memanajemen data dan informasi',
+            'is_active' => true,
+            'color' => '#344CB7'
         ]);
     }
 }
