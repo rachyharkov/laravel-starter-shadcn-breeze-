@@ -40,16 +40,26 @@ const options = {
             name: 'name',
         },
         {
+            title: 'Status',
+            data: 'is_active',
+            name: 'is_active',
+            searchable: false,
+            sortable: true,
+            render: (data) => {
+                return data ? '<span class="text-xs text-white bg-green-500 px-2 py-1 rounded-full">• Aktif</span>' : '<span class="text-xs text-white bg-red-500 px-2 py-1 rounded-full">• Tidak Aktif</span>'
+            }
+        },
+        {
             title: 'Aksi',
             name: 'action',
             searchable: false,
             sortable: false
-        },
+        }
     ],
     columnDefs: [
         {
             targets: 1, // Assuming the 'Aksi' column is the second column (index 1)
-            className: '!text-end'
+            className: 'text-end!'
         }
     ],
     language: {
@@ -82,12 +92,21 @@ watch(search_keyword, (newValue) => {
                 </AlertDescription>
             </Alert>
             <div class="flex flex-row justify-between items-center mt-4">
-                <Input v-model="search_keyword" placeholder="Ketik Pencarian disini"/>
+                <Input v-model="search_keyword" type="text" placeholder="Ketik Pencarian disini"/>
                 <Button as-child>
                     <Link :href="route('master-data.roles.create')">Tambah Baru</Link>
                 </Button>
             </div>
             <DataTable :options="options" ref="table">
+                <template #column-name="props">
+                    <div class="flex flex-col items-start">
+                        <div class="flex flex-row items-center gap-1">
+                            <span class="w-3 h-3 flex items-center justify-center rounded-sm" :style="{ backgroundColor: props.rowData.color }"></span>
+                            <span>{{props.rowData.name}}</span>
+                        </div>
+                        <span class="text-xs text-gray-500">{{props.rowData.description}}</span>
+                    </div>
+                </template>
                 <template #column-action="props">
                     <div class="flex flex-row items-center justify-end gap-1">
                         <Button variant="secondary" size="sm" asChild>

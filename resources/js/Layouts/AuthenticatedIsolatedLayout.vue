@@ -23,7 +23,7 @@ watch(messages, (newValue) => {
 <template>
     <div class="flex flex-col gap-2 h-svh">
         <Header :title="title" :breadcrumb="breadcrumb" :description="description" :isolated="true"/>
-        <div class="flex flex-col items-start justify-start py-3 w-full px-2 max-w-screen-lg mx-auto">
+        <div class="flex flex-col items-start justify-start py-3 w-full px-2 max-w-(--breakpoint-lg) mx-auto">
             <slot/>
         </div>
     </div>

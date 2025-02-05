@@ -1,18 +1,13 @@
 <script setup>
-import { router, useForm } from '@inertiajs/vue3'
+import { useForm } from '@inertiajs/vue3'
 import { Input } from '@/Components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/Components/ui/card'
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/Components/ui/select'
 import { Button } from '@/Components/ui/button'
 import { Alert, AlertDescription, AlertTitle } from '@/Components/ui/alert'
 import { Label } from '@/components/ui/label'
-import { Textarea } from '@/Components/ui/textarea'
 import { Link } from '@inertiajs/vue3'
-import { reactive, ref } from 'vue'
-import { Avatar, AvatarFallback, AvatarImage } from '@/Components/ui/avatar'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/Components/ui/dropdown-menu'
+import { ref } from 'vue'
 import { Switch } from '@/Components/ui/switch'
-import { RadioGroup, RadioGroupItem } from '@/Components/ui/radio-group'
 
 const props = defineProps({
     role: Object,
@@ -96,25 +91,21 @@ const save = () => {
                 </CardContent>
             </Card>
             <Card class="flex flex-row">
-                <CardHeader class="w-1/3">
-                    <CardTitle>Indikator/Status</CardTitle>
-                    <CardDescription>
-                        Tentukan warna dan status berjalan atau tidaknya peran ini
-                    </CardDescription>
-                </CardHeader>
-                <CardContent class="pt-6 max-w-lg w-full flex flex-col gap-5">
-                    <div class="flex flex-col flex-wrap gap-3">
-                        <div class="grid items-center gap-2">
-                            <Label for="color">Warna Indikator</Label>
-                            <Input id="color" type="color" placeholder="John Doe" class="justify-self-start w-48" :error="form.errors.color" v-model="form.color" />
-                        </div>
+                <CardContent class="pt-6 w-full flex flex-row gap-5 justify-between items-center">
+                    <div class="flex flex-col flex-wrap gap-1 items-start">
+                        <Label for="color" class="text-xl font-bold">Warna Indikator</Label>
+                        <p class="text-xs text-gray-500">Warna ini digunakan untuk menandai peran ini</p>
                     </div>
-                    <div class="flex flex-col flex-wrap gap-3">
-                        <div class="grid items-center gap-2">
-                            <Label for="description">Status</Label>
-                            <Switch v-model="form.is_active" />
-                        </div>
+                    <Input id="color" type="color" placeholder="John Doe" class="justify-self-start w-48" :error="form.errors.color" v-model="form.color" />
+                </CardContent>
+            </Card>
+            <Card class="flex flex-row">
+                <CardContent class="pt-6 w-full flex flex-row gap-5 justify-between items-center">
+                    <div class="flex flex-col flex-wrap gap-1 items-start">
+                        <Label for="color" class="text-xl font-bold">Status</Label>
+                        <p class="text-xs text-gray-500">Pengguna yang memiliki peran ini dapat login ke sistem</p>
                     </div>
+                    <Switch :checked="form.is_active" @update:checked="form.is_active = !form.is_active" />
                 </CardContent>
             </Card>
             <div class="flex flex-row justify-end gap-2 ps-4 items-center">

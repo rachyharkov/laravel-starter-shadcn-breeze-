@@ -21,9 +21,6 @@ class RoleController extends Controller
             $roles = Role::all();
 
             return DataTables::of($roles)
-                ->addColumn('description', function ($role) {
-                    return '<span class="whitespace-nowrap">' . $role->description . '</span>';
-                })
                 ->toJson();
         }
 
@@ -48,7 +45,7 @@ class RoleController extends Controller
         Role::create($validated);
         session()->flash('success','Peran '.$validated['name'].' berhasil ditambahkan');
 
-        return to_route('roles.index');
+        return to_route('master-data.roles.index');
     }
 
     /**
@@ -87,7 +84,7 @@ class RoleController extends Controller
 
         session()->flash('success','Peran '. $role->name .' berhasil diperbaharui');
 
-        return to_route('roles.index');
+        return to_route('master-data.roles.index');
     }
 
     /**
@@ -102,6 +99,6 @@ class RoleController extends Controller
             session()->flash('error', 'Terjadi kesalahan saat menghapus peran: ' . $e->getMessage());
         }
 
-        return to_route('roles.index');
+        return to_route('master-data.roles.index');
     }
 }

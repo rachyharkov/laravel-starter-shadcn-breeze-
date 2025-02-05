@@ -41,7 +41,7 @@ class UserController extends Controller
 
                     return $a;
                 })
-                ->addColumn('action', 'users.include.action')
+                ->addColumn('action', 'master-data.users.include.action')
                 ->addColumn('avatar', function ($row) {
                     if ($row->avatar == null) {
                         return 'https://www.gravatar.com/avatar/' . md5(strtolower(trim($row->email))) . '&s=500';
@@ -109,7 +109,7 @@ class UserController extends Controller
 
         session()->flash('success','Pengguna '.$user->name.' berhasil ditambahkan');
 
-        return to_route('users.index');
+        return to_route('master-data.users.index');
     }
 
     /**
@@ -199,7 +199,7 @@ class UserController extends Controller
 
         session()->flash('success','Data pengguna '. $user->name .' berhasil diperbaharui');
 
-        return to_route('users.index');
+        return to_route('master-data.users.index');
     }
 
     /**
@@ -225,6 +225,6 @@ class UserController extends Controller
             session()->flash('error', 'Terjadi kesalahan saat menghapus pengguna: ' . $e->getMessage());
         }
 
-        return to_route('users.index');
+        return to_route('master-data.users.index');
     }
 }
