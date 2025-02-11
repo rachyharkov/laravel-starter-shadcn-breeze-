@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Menu;
 use App\Models\MenuAccessRight;
 use App\Models\Role;
 use Illuminate\Http\Request;
@@ -38,7 +39,7 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
                 'current_role_session' => $current_role_session,
-                'menu_access_right' => $current_role_session ? MenuAccessRight::with(['menu', 'menu_sub_access_right.menu_sub'])->where('role_id', $current_role_session['id'])->get() : null
+                'menu' => Menu::with('menu_sub')->get()->toArray() //TODO: Filter the data based on permission
             ],
             'messages' => flash()->render('array'),
         ];

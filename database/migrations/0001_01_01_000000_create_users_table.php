@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->enum('permission_mode', ['role_oriented', 'user_oriented'])->default('role_oriented');
             $table->rememberToken();
             $table->timestamps();
         });

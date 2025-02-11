@@ -22,7 +22,7 @@ class MenuSub extends Model
      *
      * @var string[]
      */
-    protected $fillable = ['name', 'route', 'position', 'menu_id'];
+    protected $fillable = ['name', 'route', 'icon', 'position', 'menu_id'];
 
     /**
      * Get the attributes that should be cast.
@@ -31,7 +31,7 @@ class MenuSub extends Model
      */
     protected function casts(): array
     {
-        return ['name' => 'string', 'route' => 'string', 'position' => 'integer', 'created_at' => 'datetime:Y-m-d H:i:s', 'updated_at' => 'datetime:Y-m-d H:i:s'];
+        return ['name' => 'string', 'route' => 'string', 'icon' => 'string', 'position' => 'integer', 'created_at' => 'datetime:Y-m-d H:i:s', 'updated_at' => 'datetime:Y-m-d H:i:s'];
     }
 
 

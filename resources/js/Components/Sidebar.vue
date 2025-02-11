@@ -26,17 +26,17 @@
             </CardHeader>
             <CardContent>
                 <div class="flex flex-col items-start gap-3">
-                    <template v-for="(v, i) in $page.props.auth.menu_access_right">
-                        <template v-if="v.menu_sub_access_right.length > 0">
+                    <template v-for="(v, i) in $page.props.auth.menu">
+                        <template v-if="v.menu_sub.length > 0">
                             <AccordionSidebar type="single" collapsible class="w-full" default-value="item-1">
                                 <AccordionSidebarItem value="item-1">
                                     <AccordionSidebarTrigger>
-                                        <iconify-icon :icon="v.menu.icon" class="text-lg mr-2"/>{{ v.menu.name }}
+                                        <iconify-icon :icon="v.icon" class="text-lg mr-2"/>{{ v.name }}
                                     </AccordionSidebarTrigger>
                                     <AccordionSidebarContent>
-                                        <Button v-for="(vsm, ksm) in v.menu_sub_access_right" :key="ksm" size="lg" class="w-full p-0 w-full" :variant="$page.url.startsWith(`/${v.menu.route}/${vsm.menu_sub.route}`) ? '' : 'ghost'">
-                                            <Link :href="$route(`${v.menu.route}.${vsm.menu_sub.route}.index`)" class="ps-11 w-full h-full flex items-center">
-                                                {{ vsm.menu_sub.name }}
+                                        <Button v-for="(vsm, ksm) in v.menu_sub" :key="ksm" size="lg" class="w-full p-0 w-full" :variant="$page.url.startsWith(`/${v.route}/${vsm.route}`) ? '' : 'ghost'">
+                                            <Link :href="$route(`${v.route}.${vsm.route}.index`)" class="ps-11 w-full h-full flex items-center">
+                                                {{ vsm.name }}
                                             </Link>
                                         </Button>
                                     </AccordionSidebarContent>
@@ -44,9 +44,9 @@
                             </AccordionSidebar>
                         </template>
                         <template v-else>
-                            <Button size="lg" class="w-full justify-start p-0" :variant="$page.url.startsWith(`/${v.menu.route}`) ? '' : 'ghost'">
-                                <Link :href="$route(v.menu.route)" class="inline-flex h-full w-full flex-row items-center px-4">
-                                    <iconify-icon :icon="v.menu.icon" class="text-lg mr-2"/> {{ v.menu.name }}
+                            <Button size="lg" class="w-full justify-start p-0" :variant="$page.url.startsWith(`/${v.route}`) ? '' : 'ghost'">
+                                <Link :href="$route(v.route)" class="inline-flex h-full w-full flex-row items-center px-4">
+                                    <iconify-icon :icon="v.icon" class="text-lg mr-2"/> {{ v.name }}
                                 </Link>
                             </Button>
                         </template>

@@ -25,7 +25,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
-    })->name('dashboard');
+    })->name('dashboard')->middleware('check_access');
 
     Route::prefix('master-data')->as('master-data.')->group(function() {
         Route::resource('users', UserController::class)->middleware('check_access');

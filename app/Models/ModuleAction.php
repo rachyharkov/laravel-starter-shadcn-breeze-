@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ModuleAction extends Model
 {
@@ -44,4 +45,8 @@ class ModuleAction extends Model
 		return $this->belongsTo(\App\Models\MenuSub::class);
 	}
 
+    public function role_permissions(): BelongsTo
+    {
+        return $this->belongsTo(RolePermission::class);
+    }
 }

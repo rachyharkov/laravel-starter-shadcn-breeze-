@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class MenuAccessRight extends Model
+class RolePermission extends Model
 {
     use HasFactory;
 
@@ -14,14 +14,14 @@ class MenuAccessRight extends Model
      *
      * @var string
      */
-    protected $table = 'menu_access_rights';
+    protected $table = 'role_permissions';
 
     /**
      * The attributes that are mass assignable.
      *
      * @var string[]
      */
-    protected $fillable = ['role_id', 'menu_id', 'menu_sub_id'];
+    protected $fillable = ['role_id', 'module_action_id'];
 
     /**
      * Get the attributes that should be cast.
@@ -32,21 +32,4 @@ class MenuAccessRight extends Model
     {
         return ['created_at' => 'datetime:Y-m-d H:i:s', 'updated_at' => 'datetime:Y-m-d H:i:s'];
     }
-
-
-	public function role(): \Illuminate\Database\Eloquent\Relations\BelongsTo
-	{
-		return $this->belongsTo(\App\Models\Role::class);
-	// }
-    }
-
-	public function menu(): \Illuminate\Database\Eloquent\Relations\BelongsTo
-	{
-		return $this->belongsTo(\App\Models\Menu::class);
-	}
-
-	public function menu_sub_access_right(): \Illuminate\Database\Eloquent\Relations\HasMany
-	{
-		return $this->hasMany(\App\Models\MenuSubAccessRight::class);
-	}
 }

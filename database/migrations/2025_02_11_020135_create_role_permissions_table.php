@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('menu_access_rights', function (Blueprint $table) {
+        Schema::create('role_permissions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('role_id')->constrained('roles')->cascadeOnUpdate()->cascadeOnDelete();
-			$table->foreignId('menu_id')->constrained('menus');
-			// $table->foreignId('menu_sub_id')->nullable()->constrained()->references('id')->on('menu_subs')->cascadeOnUpdate();
+            $table->foreignId('module_action_id')->constrained('module_actions')->cascadeOnUpdate()->cascadeOnDelete();
             $table->timestamps();
         });
     }
@@ -25,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('menu_access_rights');
+        Schema::dropIfExists('role_permissions');
     }
 };

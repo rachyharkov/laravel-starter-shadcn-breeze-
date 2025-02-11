@@ -7,6 +7,7 @@ use Illuminate\Database\Seeder;
 use App\Models\Menu;
 use App\Models\MenuSub;
 use App\Models\ModuleAction;
+use App\Models\RolePermission;
 
 class MenuSeeder extends Seeder
 {
@@ -36,6 +37,7 @@ class MenuSeeder extends Seeder
                     [
                         'name'      => 'Peran',
                         'route'     => 'roles',
+                        'icon'      => 'lucide:user-round-cog',
                         'actions'    => [
                             [
                                 'action' => 'index',
@@ -48,6 +50,10 @@ class MenuSeeder extends Seeder
                             [
                                 'action' => 'store',
                                 'keterangan' => 'Simpan langsung perna baru'
+                            ],
+                            [
+                                'action' => 'show',
+                                'keterangan' => 'Lihat data peran'
                             ],
                             [
                                 'action' => 'edit',
@@ -66,6 +72,7 @@ class MenuSeeder extends Seeder
                     [
                         'name'      => 'Pengguna',
                         'route'     => 'users',
+                        'icon'      => 'lucide:users',
                         'actions'   => [
                             [
                                 'action' => 'index',
@@ -78,6 +85,10 @@ class MenuSeeder extends Seeder
                             [
                                 'action' => 'store',
                                 'keterangan' => 'Simpan langsung user baru'
+                            ],
+                            [
+                                'action' => 'show',
+                                'keterangan' => 'lihat data pengguna'
                             ],
                             [
                                 'action' => 'edit',
@@ -96,6 +107,7 @@ class MenuSeeder extends Seeder
                     [
                         'name'      => 'Hak Akses',
                         'route'     => 'accesses',
+                        'icon'      => 'lucide:shield-ellipsis',
                         'actions'   => [
                             [
                                 'action' => 'index',
@@ -133,15 +145,21 @@ class MenuSeeder extends Seeder
                         'position' => $kms + 1,
                         'menu_id' => $menu->id,
                         'name'      => $sub['name'],
-                        'route'     => $sub['route']
+                        'route'     => $sub['route'],
+                        'icon'      => $sub['icon']
                     ]);
 
                     if(isset($sub['actions'])) {
                         foreach ($sub['actions'] as $kmss => $value) {
-                            ModuleAction::create([
+                            $module_action = ModuleAction::create([
                                 'menu_sub_id'   => $submenu->id,
                                 'action'    => $value['action'],
                                 'keterangan'=> $value['keterangan']
+                            ]);
+
+                            RolePermission::create([
+                                'role_id'   => 1,
+                                'module_action_id'    => $module_action->id
                             ]);
                         }
                     }
@@ -151,10 +169,20 @@ class MenuSeeder extends Seeder
 
             if(isset($m['actions'])) {
                 foreach ($m['actions'] as $key => $value) {
-                    ModuleAction::create([
+                    $module_action = ModuleAction::create([
                         'menu_id'   => $menu->id,
                         'action'    => $value['action'],
                         'keterangan'=> $value['keterangan']
+                    ]);
+
+                    RolePermission::create([
+                        'role_id'   => 1,
+                        'module_action_id'    => $module_action->id
+                    ]);
+
+                    RolePermission::create([
+                        'role_id'   => 2,
+                        'module_action_id'    => $module_action->id
                     ]);
                 }
             }
