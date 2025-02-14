@@ -27,7 +27,7 @@
             <CardContent>
                 <div class="flex flex-col items-start gap-3">
                     <template v-for="(v, i) in $page.props.auth.menu">
-                        <template v-if="v.menu_sub.length > 0">
+                        <template v-if="v.menu_sub && v.menu_sub.length > 0">
                             <AccordionSidebar type="single" collapsible class="w-full" default-value="item-1">
                                 <AccordionSidebarItem value="item-1">
                                     <AccordionSidebarTrigger>
