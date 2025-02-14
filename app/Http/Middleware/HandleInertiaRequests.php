@@ -36,41 +36,47 @@ class HandleInertiaRequests extends Middleware
     {
         $current_role_session = session('current_role_session');
 
-        $menu = Menu::with([
-            'menu_sub.module_action' => function ($q) use ($current_role_session) {
-                $q->leftJoin('role_permissions', 'module_actions.id', '=', 'role_permissions.module_action_id');
-                $q->where('action', 'index');
-                $q->where('role_id', $current_role_session['id']);
-            },
-            'module_action' => function ($q) use ($current_role_session) {
-                $q->leftJoin('role_permissions', 'module_actions.id', '=', 'role_permissions.module_action_id');
-                $q->where('action', 'index');
-                $q->where('role_id', $current_role_session['id']);
-            }])
-            ->get();
+        $data_auth_shared = [
+            'user' => $request->user(),
+            'current_role_session' => $current_role_session,
+        ];
 
-        $menu_new = $menu->map(function($item) {
-            foreach ($item->menu_sub as $k => $v) {
-                if(count($v->module_action) <= 0) {
-                    unset($item->menu_sub[$k]);
+        if(isset($current_role_session['id'])) {
+            $menu = Menu::with([
+                'menu_sub.module_action' => function ($q) use ($current_role_session) {
+                    $q->leftJoin('role_permissions', 'module_actions.id', '=', 'role_permissions.module_action_id');
+                    $q->where('action', 'index');
+                    $q->where('role_id', $current_role_session['id']);
+                },
+                'module_action' => function ($q) use ($current_role_session) {
+                    $q->leftJoin('role_permissions', 'module_actions.id', '=', 'role_permissions.module_action_id');
+                    $q->where('action', 'index');
+                    $q->where('role_id', $current_role_session['id']);
+                }])
+                ->get();
+
+            $menu_new = $menu->map(function($item) {
+                foreach ($item->menu_sub as $k => $v) {
+                    if(count($v->module_action) <= 0) {
+                        unset($item->menu_sub[$k]);
+                    }
+                }
+                return $item;
+            });
+
+            foreach ($menu_new as $key => $value) {
+                if((count($value->menu_sub) <= 0) && count($value->module_action) <= 0) {
+                    unset($menu_new[$key]);
                 }
             }
-            return $item;
-        });
 
-        foreach ($menu_new as $key => $value) {
-            if((count($value->menu_sub) <= 0) && count($value->module_action) <= 0) {
-                unset($menu_new[$key]);
-            }
+            $data_auth_shared['menu'] = $menu_new;
         }
+
 
         return [
             ...parent::share($request),
-            'auth' => [
-                'user' => $request->user(),
-                'current_role_session' => $current_role_session,
-                'menu' => $menu_new
-            ],
+            'auth' => $data_auth_shared,
             'messages' => flash()->render('array'),
         ];
     }

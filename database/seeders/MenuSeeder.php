@@ -103,10 +103,18 @@ class MenuSeeder extends Seeder
                                 'keterangan' => 'hapus usernya'
                             ],
                         ]
-                    ],
+                    ]
+                ]
+            ],
+            [
+                'name'      => 'Sistem',
+                'route'     => 'system',
+                // 'actions'    => null,
+                'icon'      => 'lucide:cog',
+                'subs' => [
                     [
                         'name'      => 'Hak Akses',
-                        'route'     => 'accesses',
+                        'route'     => 'permissions',
                         'icon'      => 'lucide:shield-ellipsis',
                         'actions'   => [
                             [
@@ -118,6 +126,10 @@ class MenuSeeder extends Seeder
                                 'keterangan' => 'Edit akses'
                             ],
                             [
+                                'action' => 'store',
+                                'keterangan' => 'Simpan langsung user baru'
+                            ],
+                            [
                                 'action' => 'update',
                                 'keterangan' => 'Update akses'
                             ],
@@ -127,8 +139,31 @@ class MenuSeeder extends Seeder
                             ],
                         ]
                     ],
+                    [
+                        'name'      => 'Menu Navigasi',
+                        'route'     => 'navigation-menu',
+                        'icon'      => 'lucide:menu',
+                        'actions'   => [
+                            [
+                                'action' => 'index',
+                                'keterangan' => 'Lihat daftar menu'
+                            ],
+                            [
+                                'action' => 'store',
+                                'keterangan' => 'Tambah menu baru'
+                            ],
+                            [
+                                'action' => 'update',
+                                'keterangan' => 'Update menu'
+                            ],
+                            [
+                                'action' => 'destroy',
+                                'keterangan' => 'hapus menu'
+                            ],
+                        ]
+                    ]
                 ]
-            ],
+            ]
         ];
 
         foreach ($menus as $km => $m) {

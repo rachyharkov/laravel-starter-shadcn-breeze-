@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\MasterData;
+namespace App\Http\Controllers\System;
 
 use App\Http\Controllers\Controller;
 use App\Models\Menu;
@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Yajra\DataTables\Facades\DataTables;
 
-class AccessController extends Controller
+class PermissionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -98,7 +98,7 @@ class AccessController extends Controller
             }
         }
 
-        return Inertia::render('MasterData/Accesses/Index');
+        return Inertia::render('System/Permissions/Index');
     }
 
     /**

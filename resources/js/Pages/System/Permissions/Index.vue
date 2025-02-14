@@ -26,7 +26,7 @@ const options_user = {
     serverSide: true,
     responsive: true,
     ajax: {
-        url: route('master-data.accesses.index') + '?users=true',
+        url: route('master-data.permissions.index') + '?users=true',
     },
     columns: [{
             title:'Nama',
@@ -72,7 +72,7 @@ const roles = [
 const menus = ref([])
 
 const get_menus = () => {
-    axios.get(route('master-data.accesses.index') + '?menus=true')
+    axios.get(route('master-data.permissions.index') + '?menus=true')
         .then(response => {
             menus.value = response.data
         })

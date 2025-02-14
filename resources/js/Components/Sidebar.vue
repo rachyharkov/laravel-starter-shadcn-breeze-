@@ -1,14 +1,19 @@
 <script setup>
     import ApplicationLogo from "@/Components/ApplicationLogo.vue";
-    import Dropdown from "@/Components/Dropdown.vue";
-    import DropdownLink from "@/Components/DropdownLink.vue";
-    import NavLink from "@/Components/NavLink.vue";
-    import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
-    import { Link } from "@inertiajs/vue3";
+    import { Link, usePage } from "@inertiajs/vue3";
     import { Card, CardContent, CardHeader } from "@/Components/ui/card";
     import { Button } from "@/Components/ui/button";
-    import { Icon } from "@iconify/vue";
-    import { AccordionSidebar, AccordionSidebarContent, AccordionSidebarItem, AccordionSidebarTrigger } from "@/Components/ui/accordion-sidebar";
+    import { ref } from "vue";
+    import { Collapsible, CollapsibleContent, CollapsibleTrigger} from '@/Components/ui/collapsible'
+
+    const page = usePage()
+
+    const menus = ref(page.props.auth.menu)
+
+    for (let index = 0; index < menus.length; index++) {
+        menus.value[index]['show'] = false
+    }
+
 </script>
 
 <template>
@@ -26,22 +31,36 @@
             </CardHeader>
             <CardContent>
                 <div class="flex flex-col items-start gap-3">
-                    <template v-for="(v, i) in $page.props.auth.menu">
+                    <template v-for="(v, i) in menus">
                         <template v-if="v.menu_sub && v.menu_sub.length > 0">
-                            <AccordionSidebar type="single" collapsible class="w-full" default-value="item-1">
-                                <AccordionSidebarItem value="item-1">
-                                    <AccordionSidebarTrigger>
-                                        <iconify-icon :icon="v.icon" class="text-lg mr-2"/>{{ v.name }}
-                                    </AccordionSidebarTrigger>
-                                    <AccordionSidebarContent>
-                                        <Button v-for="(vsm, ksm) in v.menu_sub" :key="ksm" size="lg" class="w-full p-0 w-full" :variant="$page.url.startsWith(`/${v.route}/${vsm.route}`) ? '' : 'ghost'">
-                                            <Link :href="$route(`${v.route}.${vsm.route}.index`)" class="ps-11 w-full h-full flex items-center">
-                                                {{ vsm.name }}
-                                            </Link>
+                            <div class="w-full">
+                                <Collapsible v-model:open="v.show">
+                                    <CollapsibleTrigger class="w-full">
+                                        <Button size="lg" class="w-full justify-between p-0 inline-flex flex-row items-center px-4" :variant="$page.url.startsWith(`/${v.route}`) ? '' : 'ghost'">
+                                            <div class="flex">
+                                                <iconify-icon :icon="v.icon" class="text-lg mr-2"/>
+                                                <span class="flex-1">{{ v.name }}</span>
+                                            </div>
+                                            <iconify-icon
+                                                icon="mdi:chevron-down"
+                                                class="transition-transform duration-200"
+                                                :class="{ 'rotate-180': v.show }"
+                                            />
                                         </Button>
-                                    </AccordionSidebarContent>
-                                </AccordionSidebarItem>
-                            </AccordionSidebar>
+                                    </CollapsibleTrigger>
+                                    <CollapsibleContent>
+                                        <ul>
+                                            <li v-for="(vsm, ksm) in v.menu_sub" :key="ksm">
+                                                <Button  size="lg" class="w-full pt-0 pe-0 ps-0 pb-0 w-full" :variant="$page.url.startsWith(`/${v.route}/${vsm.route}`) ? '' : 'ghost'">
+                                                    <Link :href="$route(`${v.route}.${vsm.route}.index`)" class="ps-11 w-full h-full flex items-center">
+                                                        {{ vsm.name }}
+                                                    </Link>
+                                                </Button>
+                                            </li>
+                                        </ul>
+                                    </CollapsibleContent>
+                                </Collapsible>
+                            </div>
                         </template>
                         <template v-else>
                             <Button size="lg" class="w-full justify-start p-0" :variant="$page.url.startsWith(`/${v.route}`) ? '' : 'ghost'">
