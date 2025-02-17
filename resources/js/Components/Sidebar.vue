@@ -8,11 +8,13 @@
 
     const page = usePage()
 
-    const menus = ref(page.props.auth.menu)
+    let p = page.props.auth.menu
 
-    for (let index = 0; index < menus.length; index++) {
-        menus.value[index]['show'] = false
-    }
+    // for (let index = 0; index < p.length; index++) {
+    //     p[index].show = page.url.startsWith(`/${p[index]['route']}`) ? true : false
+    // }
+
+    const menus = ref(p)
 
 </script>
 
@@ -32,11 +34,11 @@
             <CardContent>
                 <div class="flex flex-col items-start gap-3">
                     <template v-for="(v, i) in menus">
-                        <template v-if="v.menu_sub && v.menu_sub.length > 0">
-                            <div class="w-full">
-                                <Collapsible v-model:open="v.show">
+                        <div class="w-full">
+                            <template v-if="v.menu_sub">
+                                <Collapsible v-model:open="v.is_expanded" :key="i" :default-open="v.is_expanded">
                                     <CollapsibleTrigger class="w-full">
-                                        <Button size="lg" class="w-full justify-between p-0 inline-flex flex-row items-center px-4" :variant="$page.url.startsWith(`/${v.route}`) ? '' : 'ghost'">
+                                        <Button size="lg" class="w-full justify-between p-0 inline-flex flex-row items-center px-4" variant="ghost">
                                             <div class="flex">
                                                 <iconify-icon :icon="v.icon" class="text-lg mr-2"/>
                                                 <span class="flex-1">{{ v.name }}</span>
@@ -44,7 +46,7 @@
                                             <iconify-icon
                                                 icon="mdi:chevron-down"
                                                 class="transition-transform duration-200"
-                                                :class="{ 'rotate-180': v.show }"
+                                                :class="{ 'rotate-180': v.is_expanded }"
                                             />
                                         </Button>
                                     </CollapsibleTrigger>
@@ -52,7 +54,7 @@
                                         <ul>
                                             <li v-for="(vsm, ksm) in v.menu_sub" :key="ksm">
                                                 <Button  size="lg" class="w-full pt-0 pe-0 ps-0 pb-0 w-full" :variant="$page.url.startsWith(`/${v.route}/${vsm.route}`) ? '' : 'ghost'">
-                                                    <Link :href="$route(`${v.route}.${vsm.route}.index`)" class="ps-11 w-full h-full flex items-center">
+                                                    <Link :href="$route(`${v.route}.${vsm.route}.${vsm.module_action[0].action}`)" class="ps-11 w-full h-full flex items-center">
                                                         {{ vsm.name }}
                                                     </Link>
                                                 </Button>
@@ -60,15 +62,15 @@
                                         </ul>
                                     </CollapsibleContent>
                                 </Collapsible>
-                            </div>
-                        </template>
-                        <template v-else>
-                            <Button size="lg" class="w-full justify-start p-0" :variant="$page.url.startsWith(`/${v.route}`) ? '' : 'ghost'">
-                                <Link :href="$route(v.route)" class="inline-flex h-full w-full flex-row items-center px-4">
-                                    <iconify-icon :icon="v.icon" class="text-lg mr-2"/> {{ v.name }}
-                                </Link>
-                            </Button>
-                        </template>
+                            </template>
+                            <template v-else>
+                                <Button size="lg" class="w-full justify-start p-0" :variant="$page.url.startsWith(`/${v.route}`) ? '' : 'ghost'">
+                                    <Link :href="$route(`${v.route}.${v.module_action[0].action}`)" class="inline-flex h-full w-full flex-row items-center px-4">
+                                        <iconify-icon :icon="v.icon" class="text-lg mr-2"/> {{ v.name }}
+                                    </Link>
+                                </Button>
+                            </template>
+                        </div>
                     </template>
                 </div>
             </CardContent>

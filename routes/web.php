@@ -1,4 +1,6 @@
 <?php
+
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MasterData\RoleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\MasterData\UserController;
@@ -23,9 +25,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard')->middleware('check_access');
+    Route::resource('dashboard', DashboardController::class)->middleware('check_access');
 
     Route::prefix('master-data')->as('master-data.')->group(function() {
         Route::resource('users', UserController::class)->middleware('check_access');

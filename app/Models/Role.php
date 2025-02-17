@@ -35,9 +35,9 @@ class Role extends Model
         return ['name' => 'string', 'created_at' => 'datetime:Y-m-d H:i:s', 'updated_at' => 'datetime:Y-m-d H:i:s', 'is_active' => 'boolean', 'color' => 'string'];
     }
 
-    public function menu_access_rights(): HasMany
+    public function role_permissions(): HasMany
     {
-        return $this->hasMany(MenuAccessRight::class, 'role_id');
+        return $this->hasMany(RolePermission::class);
     }
 
     // public function menu(): HasManyThrough

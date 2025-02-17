@@ -5,9 +5,11 @@ namespace App\Http\Controllers\System;
 use App\Http\Controllers\Controller;
 use App\Models\Menu;
 use App\Models\MenuSub;
+use App\Models\ModuleAction;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 use Inertia\Inertia;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -62,7 +64,6 @@ class PermissionController extends Controller
                     }
 
                     $datas[] = [
-                        'id' => $menu->id,
                         'name' => $menu->name,
                         'icon' => $menu->icon,
                     ];
@@ -73,13 +74,22 @@ class PermissionController extends Controller
                         $datas[] = [
                             'id' => $v->id,
                             'name' => $v->keterangan,
+                            'allows' => Role::all()->mapWithKeys(function ($role, $key) use ($v) {
+                                return [
+                                    $key => [
+                                        'id' => $role->id,
+                                        'name' => $role->name,
+                                        'allow' => $role->role_permissions()->where('module_action_id', $v->id)->exists()
+                                    ]
+                                ];
+                            })
                         ];
                     }
                 }
 
                 foreach($menu_subs as $key => $menu_sub) {
                     $datas[] = [
-                        'id' => $menu_sub->id,
+                        // 'id' => $menu_sub->id,
                         'name' => $menu_sub->name,
                         'icon' => 'lucide:menu',
                     ];
@@ -90,6 +100,15 @@ class PermissionController extends Controller
                         $datas[] = [
                             'id' => $v->id,
                             'name' => $v->keterangan,
+                            'allows' => Role::all()->mapWithKeys(function ($role, $key) use ($v) {
+                                return [
+                                    $key => [
+                                        'id' => $role->id,
+                                        'name' => $role->name,
+                                        'allow' => $role->role_permissions()->where('module_action_id', $v->id)->exists()
+                                    ]
+                                ];
+                            })
                         ];
                     }
                 }
@@ -98,7 +117,9 @@ class PermissionController extends Controller
             }
         }
 
-        return Inertia::render('System/Permissions/Index');
+        return Inertia::render('System/Permissions/Index', [
+            'available_roles' => Role::all()
+        ]);
     }
 
     /**
@@ -136,9 +157,31 @@ class PermissionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $dummy_string)
     {
-        //
+        if($request->module_action_id === 1) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tindakan ini tidak dapat di non-aktifkan (ER:001)'
+            ], 403);
+        }
+
+        $role = Role::findOrFail($request->role_id);
+        $role->role_permissions()->where('module_action_id', $request->module_action_id)
+            ->delete();
+
+        if ($request->allow) {
+            $role->role_permissions()->create([
+                'module_action_id' => $request->module_action_id
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'allow' => $request->allow
+            ]
+        ]);
     }
 
     /**

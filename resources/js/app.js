@@ -7,6 +7,7 @@ import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createApp, h } from 'vue';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
+import Toaster from '@/Components/ui/toast/Toaster.vue'
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -24,9 +25,10 @@ createInertiaApp({
 
         VueApp.config.globalProperties.$route = route
         VueApp.component('iconify-icon', Icon)
+        VueApp.component('toaster', Toaster)
         return VueApp.use(plugin)
-                .use(ZiggyVue)
-                .mount(el);
+            .use(ZiggyVue)
+            .mount(el);
     },
     progress: {
         color: '#4B5563',

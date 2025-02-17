@@ -15,18 +15,18 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/Components/ui/tabs";
 import { Badge } from "@/Components/ui/badge";
 import axios from "axios";
 import { Checkbox } from "@/Components/ui/checkbox";
+import { useToast } from '@/components/ui/toast/use-toast'
 
 DataTable.use(DataTablesCore);
 
 const table_user = ref();
-const table_role = ref();
 
 const options_user = {
     processing: true,
     serverSide: true,
     responsive: true,
     ajax: {
-        url: route('master-data.permissions.index') + '?users=true',
+        url: route('system.permissions.index') + '?users=true',
     },
     columns: [{
             title:'Nama',
@@ -57,28 +57,43 @@ const options_user = {
     }
 }
 
-const roles = [
-    {
-        name: 'Admin',
-    },
-    {
-        name: 'Focal Point',
-    },
-    {
-        name: 'Cunguk',
-    },
-]
-
+const { toast } = useToast()
 const menus = ref([])
 
 const get_menus = () => {
-    axios.get(route('master-data.permissions.index') + '?menus=true')
+    axios.get(route('system.permissions.index') + '?menus=true')
         .then(response => {
             menus.value = response.data
         })
         .catch(error => {
             console.log(error)
         })
+}
+
+const update_permission = async (role_id, module_action_id, checked) => {
+    const index_menu = menus.value.findIndex(menu => menu.id == module_action_id)
+    const menu_module_action_id = menus.value[index_menu].allows.findIndex(allow => allow.id === role_id)
+    const state_before = menus.value[index_menu].allows[menu_module_action_id].allow
+
+    menus.value[index_menu].allows[menu_module_action_id].allow = 'loading'
+
+    try {
+        const response = await axios.put(route('system.permissions.update', 'ppp'), {
+            role_id: role_id,
+            module_action_id: module_action_id,
+            allow: checked
+        })
+        // console.log(response.data)
+        menus.value[index_menu].allows[menu_module_action_id].allow = response.data.data.allow
+    } catch (error) {
+        console.error('Error updating permission:', error)
+        menus.value[index_menu].allows[menu_module_action_id].allow = state_before
+        toast({
+            title: error.response.statusText,
+            description: error.response.data.message,
+            variant: 'destructive'
+        });
+    }
 }
 
 onMounted(() => {
@@ -170,17 +185,19 @@ onMounted(() => {
                                     <tbody>
                                         <tr class="border-b border-gray-200">
                                             <td class="font-medium text-gray-500 ps-4 py-3">Menu</td>
-                                            <td v-for="(role, i) in roles" :key="i" style="width: 1%; white-space: nowrap;"><span class="px-4 py-3 font-medium">{{ role.name }}</span></td>
+                                            <td v-for="(role, i) in $page.props.available_roles" :key="i" style="width: 1%; white-space: nowrap;"><span class="px-4 py-3 font-medium">{{ role.name }}</span></td>
                                         </tr>
                                         <tr v-for="(menu, i) in menus" :key="i" class="border-b">
-                                            <td class="px-4 py-3" :class="{ 'bg-gray-100': menu.icon ?? false }" :colspan="menu.icon ? roles.length + 1 : 1">
+                                            <td class="px-4 py-3" :class="{ 'bg-gray-100': menu.icon ?? false }" :colspan="menu.icon ? $page.props.available_roles.length + 1 : 1">
                                                 <div class="flex flex-row items-center gap-2">
                                                     <iconify-icon v-if="menu.icon" :icon="menu.icon"/> <span>{{ menu.name }}</span>
                                                 </div>
                                             </td>
                                             <template v-if="!menu.icon">
-                                                <td v-for="(role, j) in roles" :key="j" class="px-4 py-3">
-                                                    <Checkbox/>
+                                                <td v-for="(role, j) in $page.props.available_roles" :key="j" class="px-4 py-3">
+                                                    <Checkbox
+                                                        :checked="menu.allows?.find(allow => allow.id === role.id)?.allow ?? false" @update:checked="(isChecked) => update_permission(role.id, menu.id, isChecked)" :disabled="menu.allows?.find(allow => allow.id === role.id)?.allow === 'loading'"
+                                                    />
                                                 </td>
                                             </template>
                                         </tr>

@@ -18,6 +18,7 @@ watch(flash, (newValue) => {
 });
 
 
+
 </script>
 
 <template>
@@ -27,4 +28,5 @@ watch(flash, (newValue) => {
             <slot/>
         </div>
     </div>
+    <toaster></toaster>
 </template>

@@ -27,4 +27,5 @@ watch(messages, (newValue) => {
             <slot/>
         </div>
     </div>
+    <toaster></toaster>
 </template>

@@ -68,12 +68,34 @@ class HandleInertiaRequests extends Middleware
                 if((count($value->menu_sub) <= 0) && count($value->module_action) <= 0) {
                     unset($menu_new[$key]);
                 }
+            };
+            foreach ($menu_new as $key => $value) {
+
+                if(count($value->menu_sub) <= 0) {
+                    unset($menu_new[$key]->menu_sub);
+                }
+
+                if(count($value->module_action) <= 0) {
+                    unset($menu_new[$key]->module_action);
+                }
+
+            };
+
+            $m = $menu_new->toArray();
+
+            foreach ($m as $key => $value) {
+                $m[$key]['is_expanded'] = false;
+                if (str_starts_with($request->route()->getName(), $value['route'])) {
+                    $m[$key]['is_expanded'] = true;
+                }
             }
 
-            $data_auth_shared['menu'] = $menu_new;
+            // dd($m);
+
+            $data_auth_shared['menu'] = $m;
         }
 
-
+        // dd($data_auth_shared);
         return [
             ...parent::share($request),
             'auth' => $data_auth_shared,
