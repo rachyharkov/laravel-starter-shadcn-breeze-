@@ -50,7 +50,7 @@ class AuthenticatedSessionController extends Controller
             'name' => $first_role_active->role->name
         ]);
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        return redirect()->intended(route('dashboard.index', absolute: false));
     }
 
     /**

@@ -31,7 +31,6 @@ class MenuSeeder extends Seeder
             [
                 'name'      => 'Master Data',
                 'route'     => 'master-data',
-                // 'actions'    => null,
                 'icon'      => 'lucide:database',
                 'subs' => [
                     [
@@ -109,7 +108,6 @@ class MenuSeeder extends Seeder
             [
                 'name'      => 'Sistem',
                 'route'     => 'system',
-                // 'actions'    => null,
                 'icon'      => 'lucide:cog',
                 'subs' => [
                     [
@@ -136,29 +134,6 @@ class MenuSeeder extends Seeder
                             [
                                 'action' => 'destroy',
                                 'keterangan' => 'hapus akses'
-                            ],
-                        ]
-                    ],
-                    [
-                        'name'      => 'Menu Navigasi',
-                        'route'     => 'navigation-menu',
-                        'icon'      => 'lucide:menu',
-                        'actions'   => [
-                            [
-                                'action' => 'index',
-                                'keterangan' => 'Lihat daftar menu'
-                            ],
-                            [
-                                'action' => 'store',
-                                'keterangan' => 'Tambah menu baru'
-                            ],
-                            [
-                                'action' => 'update',
-                                'keterangan' => 'Update menu'
-                            ],
-                            [
-                                'action' => 'destroy',
-                                'keterangan' => 'hapus menu'
                             ],
                         ]
                     ]
